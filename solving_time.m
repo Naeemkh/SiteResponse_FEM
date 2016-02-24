@@ -25,8 +25,7 @@ u=zeros(n_e+1,nt_step);
    % resampling input file to be according to the simulation dt 
    
 %     dt_data = acc_vec_1(2,1)-acc_vec_1(1,1);
-    
-           
+          
         data_final_time = acc_vec_1(end,1);
         data_new_time_vec = 0:dt:data_final_time;
         acc_vec_new = interp1(acc_vec_1(:,1),acc_vec_1(:,2),data_new_time_vec);

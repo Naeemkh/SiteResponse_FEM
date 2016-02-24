@@ -20,23 +20,6 @@ element_det(i,3) = element_det(i,2)+1;
 end
 
 
-% Displacement matrix
-% The force is implemented at node 10 from bottom. (end - 9)
-% The results for force point node and 10 node ahead of that (end - 19) and
-% The results at the surface and 10 points below the surface are reported. 
-%
-%      . 1
-%      .
-%      . 
-%       
-%      |    
-%
-%      . 20
-%      .
-%      . 10d
-%      .
-%      .
-
 node_g1 = [1;element_index(end-9,2);element_index(end-19,2)];
 node_g2 = element_det(:,2);
 
@@ -51,15 +34,31 @@ output.simulationparams=sim_p;
 output.nodetime = u;
 output.element_index = element_index;
 
+
+% Displacement, Velocity, and Acceleration of the base
+
+
+disp_base = u(end,:)'; disp1 = [0; disp_base]; % Initial displacement is zero.
+   vel_base  = diff(disp1)/dt; vel1=[0; vel_base];
+   acc_base  = diff(vel1)/dt;
+
+
+
+
 for ij=1:size(node_g,1)
     
-   disp = u(node_g(ij,1),:)'; disp1 = [0; disp]; % Initial displacement is zero.
-   vel  = diff(disp1)/dt; vel1=[0; vel];
-   acc  = diff(vel1)/dt;
+   disp_ab = u(node_g(ij,1),:)'; disp1 = [0; disp_ab]; % Initial displacement is zero.
+   vel_ab  = diff(disp1)/dt; vel1=[0; vel_ab];
+   acc_ab  = diff(vel1)/dt;
    
-   F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.TDVA=[time disp vel acc];');
+   disp_rel = disp_ab - disp_base;
+   vel_rel  = vel_ab  - vel_base; 
+   acc_rel  = acc_ab  - acc_base;
+   
+   F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
+   F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
    eval(F1)
-
+   eval(F2)
 end
 
 output.simulationparams.totaltime=toc(t1);  % Recording simulation time (sec)

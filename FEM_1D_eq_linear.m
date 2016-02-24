@@ -45,16 +45,16 @@ soil_layers = [
 
 %% Simulation Parameters
 
-sim_time      = 20;
+sim_time      = 5;
 dt            = 0.001  ;
 use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
-input_acceleration = 'acc_data.txt';
+input_acceleration = 'acc_mexican_hat_10hz.txt';
 
 
 sim_name = sprintf('%s%s%s%s%s%s%s','sim_',num2str(use_damping),'_',num2str(sim_time),'_',num2str(dt),'_',num2str(max(max(soil_layers(:,3))))); % sim_usedamping_simtime_dt_elemntsize;
 
 acc_vec_1 = load(input_acceleration);
-acc_vec_1(:,2)=acc_vec_1(:,2)*500;
+acc_vec_1(:,2)=acc_vec_1(:,2)*100;
 
 %% Building Material Matrix
 
@@ -95,7 +95,7 @@ M_inv = inv(M_mat);
 C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
 
 %% Boundary condition
- C = boundary_condition(C);
+C = boundary_condition(C);
 
 %% Reporting simulation parameters
 
@@ -106,7 +106,7 @@ sim_p = sim_parameters(dt,sim_time,sim_name,...
 %% Time solution
 
 
-u = sloving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
+u = solving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
 
 
 %% Report acceleration, velocity, and displacement and simulation params
