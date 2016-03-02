@@ -20,7 +20,7 @@ element_det(i,3) = element_det(i,2)+1;
 end
 
 
-node_g1 = [1;element_index(end-9,2);element_index(end-19,2)];
+node_g1 = [1;element_index(end,3);element_index(end-19,2)];
 node_g2 = element_det(:,2);
 
 

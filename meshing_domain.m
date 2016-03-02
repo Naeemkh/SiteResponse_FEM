@@ -43,7 +43,7 @@ while end_meshing ~= 0
     element_index(i,3) = i+1;  % right node index
     element_index(i,6) = material_mat(cur_material,2); % density
     element_index(i,7) = material_mat(cur_material,3); % Module
-    element_index(i,8) = material_mat(cur_material,6); % damping
+    element_index(i,8) = material_mat(cur_material,7); % damping
     
     
     if i==1

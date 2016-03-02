@@ -37,24 +37,23 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 %soil_layers --> 4 Columns : C1: soil type, C2: thick, C3: Max element
 %size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
 
-soil_layers = [
-                3 100    20   1 
-                1 200    20   1
-                2 1000   20   1
+soil_layers = [ 2 1000   5   1
               ];
 
+depth_results=[10 50 100 500 800]; % Input depth that you want waveform for them.          
+          
 %% Simulation Parameters
 
 sim_time      = 5;
-dt            = 0.001  ;
-use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
+dt            = 0.0005  ;
+use_damping   = 1;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
 input_acceleration = 'acc_mexican_hat_10hz.txt';
 
 
 sim_name = sprintf('%s%s%s%s%s%s%s','sim_',num2str(use_damping),'_',num2str(sim_time),'_',num2str(dt),'_',num2str(max(max(soil_layers(:,3))))); % sim_usedamping_simtime_dt_elemntsize;
 
 acc_vec_1 = load(input_acceleration);
-acc_vec_1(:,2)=acc_vec_1(:,2)*100;
+acc_vec_1(:,2)=acc_vec_1(:,2)*20;
 
 %% Building Material Matrix
 
@@ -110,7 +109,7 @@ u = solving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
 
 
 %% Report acceleration, velocity, and displacement and simulation params
-output = waveform_gen(sim_p,u,element_index,[10,20,80],t1);
+output = waveform_gen(sim_p,u,element_index,depth_results,t1);
 
 sname = sprintf('%s%s%s','simulation_results/simulation_',sim_name,'.mat');
 save(sname,'output');

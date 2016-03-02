@@ -5,7 +5,7 @@ function material_mat=build_material_mat(soil_pro,soil_layers)
 disp('-------> Building material matrix ...');
 
 n_layers=size(soil_layers,1);
-material_mat=zeros(1,7);
+material_mat=zeros(1,8);
 
 for i=1:1:n_layers
     if i == 1
@@ -22,8 +22,8 @@ for i=1:1:n_layers
         material_mat(1,4) = 0;
         material_mat(1,5) = soil_layers(1,2);
         material_mat(1,6) = soil_layers(1,3);
-        material_mat(1,7) = soil_layers(1,4);
-        
+        material_mat(1,7) = soil_property(1,3);
+        material_mat(1,8) = soil_layers(1,4);
     elseif i > 1
         
         % extracting the properties of the soil layer.
@@ -38,8 +38,8 @@ for i=1:1:n_layers
         material_mat(i,4) = material_mat(i-1,5);
         material_mat(i,5) = material_mat(i,4)+soil_layers(i,2);
         material_mat(i,6) = soil_layers(i,3);
-        material_mat(i,7) = soil_layers(i,4);
-        
+        material_mat(i,7) = soil_property(i,3);
+        material_mat(i,8) = soil_layers(i,4);
        
     end
     

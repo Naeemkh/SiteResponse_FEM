@@ -30,12 +30,12 @@ switch use_damping
             Mu = element_index(i,7);
             element_damping = element_index(i,8);
             
-            c_local(1,1)=0.5;
-            c_local(1,2)=-0.5;
-            c_local(2,1)=-0.5;
-            c_local(2,2)=0.5;
+            c_local(1,1)=1;
+            c_local(1,2)=-1;
+            c_local(2,1)=-1;
+            c_local(2,2)=1;
             
-            c_local_m=c_local*(h/2)*Mu*element_damping*2/w_1/100;
+            c_local_m=c_local*(1/h)*Mu*element_damping*2/w_1;
             
             C_mat(i,i)     = C_mat(i,i)     +  c_local_m(1,1);
             C_mat(i,i+1)   = C_mat(i,i+1)   +  c_local_m(1,2);
