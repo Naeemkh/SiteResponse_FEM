@@ -54,8 +54,8 @@ switch use_damping
         w_n = 2*pi*1;  % Assuming first mode is 1 Hz
         w_m = 2*pi*10; % Assuming second mode is 10 Hz
         
-        alpha_1 = (w_n*w_m)/(w_n+w_m)/100;
-        beta_1  = (1/(w_n+w_m))/100;
+        alpha_1 = 2*(w_n*w_m)/(w_n+w_m);
+        beta_1  = 2*(1/(w_n+w_m));
         n_e = size(element_index,1);
         
         % Stiffness matrix (Part Beta)
@@ -67,12 +67,12 @@ switch use_damping
             Mu = element_index(i,7);
             element_damping = element_index(i,8);
             
-            c_local(1,1)=0.5;
-            c_local(1,2)=-0.5;
-            c_local(2,1)=-0.5;
-            c_local(2,2)=0.5;
+            c_local(1,1)=1;
+            c_local(1,2)=-1;
+            c_local(2,1)=-1;
+            c_local(2,2)=1;
             
-            c_local_m=c_local*(h/2)*Mu*element_damping;
+            c_local_m=c_local*(1/h)*Mu*element_damping;
             
             C_mat(i,i)     = C_mat(i,i)     +  c_local_m(1,1);
             C_mat(i,i+1)   = C_mat(i,i+1)   +  c_local_m(1,2);
@@ -82,7 +82,7 @@ switch use_damping
             
         end
         
-        C_mat = 2*beta_1*C_mat;
+        C_mat = beta_1*C_mat;
         % Mass Matrix (Part Alpha)
         
         
@@ -93,12 +93,14 @@ switch use_damping
             rho = element_index(i,6);
             element_damping = element_index(i,8);
             
-            m_local(1,1)=0.6667;
-            m_local(1,2)=0.3333;
-            m_local(2,1)=0.3333;
-            m_local(2,2)=0.6667;
+            m_local(1,1)=0.3333;
+            m_local(1,2)=0.1666;
+            m_local(2,1)=0.1666;
+            m_local(2,2)=0.3333;
             
-            m_local_m=m_local*(h/2)*rho*element_damping;
+       
+            
+            m_local_m=m_local*(h)*rho*element_damping;
             
             
             M_mat_c(i,i)     = M_mat_c(i,i)     + m_local_m(1,1);
@@ -108,12 +110,11 @@ switch use_damping
             
         end
         
-        M_mat_c = M_mat_c * 2 * alpha_1;
+        M_mat_c = M_mat_c * alpha_1;
         
         C = C_mat + M_mat_c;
         
-        
-        
+             
         
     case 3
         

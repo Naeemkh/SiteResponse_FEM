@@ -1,4 +1,4 @@
-function u = sloving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,input)
+function u = solving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,input)
 
 % Input could be acc : acceleration  disp: displacement.
 
