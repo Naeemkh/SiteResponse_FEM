@@ -45,8 +45,8 @@ while end_meshing ~= 0
     element_index(i,7) = material_mat(cur_material,3); % Module
     element_index(i,8) = material_mat(cur_material,7); % damping
     element_index(i,9) = material_mat(cur_material,9); % Material_type  based on material mat matrix
-    
-    
+    element_index(i,10) = 0; % initial effective strain.
+    element_index(i,11) = material_mat(cur_material,3); % Fixed Module (Gmax)
     if i==1
         space_inc = min(material_mat(cur_material,6),material_mat(cur_material,5));
     else

@@ -47,16 +47,17 @@ depth_results=[10 50 ]; % Input depth that you want waveform for them.
           
 %% Simulation Parameters
 
-sim_time      = 5;
+sim_time      = 10;
 dt            = 0.0001  ;
 use_damping   = 2;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
 input_acceleration = 'acc_mexican_hat_10hz.txt';
+num_it        = 2;      % Number of iteration for equivalent linear method.
 
 
 sim_name = sprintf('%s%s%s%s%s%s%s','sim_',num2str(use_damping),'_',num2str(sim_time),'_',num2str(dt),'_',num2str(max(max(soil_layers(:,3))))); % sim_usedamping_simtime_dt_elemntsize;
 
 acc_vec_1 = load(input_acceleration);
-acc_vec_1(:,2)=acc_vec_1(:,2)*20;
+acc_vec_1(:,2)=acc_vec_1(:,2)*40;
 
 %% Building Material Matrix
 
@@ -69,7 +70,18 @@ material_mat=build_material_mat(soil_pro,soil_layers);
 
 element_index = meshing_domain(material_mat);
 
+%% Initilizing the outcome matrix.
+output=[];
 
+
+% for loop for the number of iteration should start from here.
+
+for eq_it=1:num_it
+
+
+%% updating damping and stiffness of the elements based on the strain level.
+
+element_index = update_material_pro(element_index,output,eq_it);
 
 %% Generate M and K matrix
 
@@ -119,8 +131,8 @@ output = waveform_gen(sim_p,u,element_index,depth_results,t1);
 output=extract_strain_stress(output);
 
 
-
-
+% for loop for iteration should end here.
+end
 
 sname = sprintf('%s%s%s','simulation_results/simulation_',sim_name,'.mat');
 save(sname,'output');
