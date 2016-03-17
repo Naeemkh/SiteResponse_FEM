@@ -26,10 +26,11 @@ for i=1:number_timest
      
 end
 
-effective_strain=max(strain_matrix,[],2);
 
+
+effective_strain=max(strain_matrix,[],2);
 output.results.strain_matrix=strain_matrix;
-output.results.effective_strain = effective_strain;
+output.results.effective_strain = effective_strain*0.65;
 
 
 end

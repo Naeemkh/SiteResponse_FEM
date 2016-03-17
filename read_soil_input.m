@@ -11,14 +11,14 @@ for i=1:n_soil_type
 
    
     
-    temp_ggmax = sprintf('%s%s',rock_soil_type{i},'_ggmax.txt');
-    temp_damping = sprintf('%s%s',rock_soil_type{i},'_damping.txt');
-    temp_prop = sprintf('%s%s',rock_soil_type{i},'_prop.txt');
+    temp_ggmax = sprintf('%s%s%s','input_soil_pro/',rock_soil_type{i},'_ggmax.txt');
+    temp_damping = sprintf('%s%s%s','input_soil_pro/',rock_soil_type{i},'_damping.txt');
+    temp_prop = sprintf('%s%s%s','input_soil_pro/',rock_soil_type{i},'_prop.txt');
     
     
-    t_ggmax = load(temp_ggmax);
+    t_ggmax   = load(temp_ggmax);
     t_damping = load(temp_damping);
-    t_prop = load(temp_prop);
+    t_prop    = load(temp_prop);
     
     
     F1=sprintf('%s%s%s','soil_pro.s_r_type_',num2str(i),'.ggmax = t_ggmax;');

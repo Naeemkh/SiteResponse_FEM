@@ -1,4 +1,4 @@
-function u = solving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,input)
+function output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,input)
 
 % Input could be acc : acceleration  disp: displacement.
 
@@ -34,14 +34,21 @@ u=zeros(n_e+1,nt_step);
   % zero pading input file incase that there is no enough data to read.      
   if acc_vec(end,1) < sim_time
       
-      acc_vec_temp_1 = acc_vec(end,1):dt:sim_time;
+      acc_vec_temp_1 = acc_vec(end,1)+dt:dt:sim_time-dt;
       acc_vec_temp_2 = zeros(size(acc_vec_temp_1,2),1);
       acc_vec_temp = [acc_vec_temp_1' acc_vec_temp_2];
       acc_vec = [acc_vec;acc_vec_temp];
       
   end
-        
+  
+output.acc_temp = acc_vec;  
+
+% Mu..+cu.+ku=-mug..;
+acc_vec(:,2)=acc_vec(:,2)*-1;
+
+  
 unit_vec=ones(n_e+1,1);
+
 
 
 if strcmp(input,'acc')==1
@@ -67,7 +74,7 @@ elseif strcmp(input,'disp')==1
     end       
        
 end
-
+output.nodetime=u;
 
 disp('-------> End of solving in time domain.');
 

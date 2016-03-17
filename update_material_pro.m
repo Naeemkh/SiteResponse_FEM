@@ -1,4 +1,4 @@
-function element_index = update_material_pro(element_index,output, eq_it)
+function element_index = update_material_pro(element_index,output,eq_it)
 
 
 if eq_it == 1
@@ -37,11 +37,11 @@ else
             
             if effective_strain(ii,1) <= soil_details.ggmax(1,1)
                 
-                damping = soil_details.damping(1,2);
+                module_factor = soil_details.ggmax(1,2);
                 
             elseif effective_strain(ii,1) >= soil_details.ggmax(end,1)
                 
-                damping = soil_details.damping(end,2);
+                module_factor = soil_details.ggmax(end,2);
                 
             end
             

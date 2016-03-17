@@ -2,7 +2,7 @@
 % Finite element code for 1D wave propagation boundary condition problem
 % Written by: Naeem Khoshnevis (15 October 2015)
 % Email: nkhshnvs@memphis.edu
-% Last update: 9 February 2016
+% Last update: 3 March 2016
 
 clc
 clear all;
@@ -28,7 +28,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'sand','rock','softsoil'};
+rock_soil_type = {'rock','clay','sand'};
 
 soil_pro=read_soil_input(rock_soil_type); % read the input files.
 
@@ -37,34 +37,40 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 %soil_layers --> 4 Columns : C1: soil type, C2: thick, C3: Max element
 %size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
 
-soil_layers = [ 3 500   10   1
-                1 500   10   1
-                3 500   10   1
-                2 500   10   1
+soil_layers = [ 
+                2 1000   10   1
+                
               ];
 
-depth_results=[10 50 ]; % Input depth that you want waveform for them.          
+depth_results=[1 5 100 200 500]; % Input depth that you want waveform for them.          
           
 %% Simulation Parameters
 
-sim_time      = 10;
+sim_time      = 5;
 dt            = 0.0001  ;
 use_damping   = 2;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
-input_acceleration = 'acc_mexican_hat_10hz.txt';
-num_it        = 2;      % Number of iteration for equivalent linear method.
+input_acceleration = 'input_acc/acc_mexican_hat_10hz.txt';
+num_it        = 1;      % Number of iteration for equivalent linear method.
+g             = 9.81;
+max_value_acc = 1;    % coefficient for maximum value of the input as % of g.
+
+% Simulation Name
+serial_no = load('serial_no.txt');
+serial_no = serial_no +1;
+sim_name = sprintf('%s%s%s%s%s%s%s%s%s','sim_',num2str(serial_no),'_',num2str(use_damping),'_',num2str(sim_time),'_',num2str(dt),'_',num2str(max(max(soil_layers(:,3))))); % sim_usedamping_simtime_dt_elemntsize;
+save('serial_no.txt','serial_no','-ascii');
+nn = sprintf('%s%s','-------> Simulation Number: ',num2str(serial_no));
+disp(nn);
 
 
-sim_name = sprintf('%s%s%s%s%s%s%s','sim_',num2str(use_damping),'_',num2str(sim_time),'_',num2str(dt),'_',num2str(max(max(soil_layers(:,3))))); % sim_usedamping_simtime_dt_elemntsize;
 
 acc_vec_1 = load(input_acceleration);
-acc_vec_1(:,2)=acc_vec_1(:,2)*40;
+acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
+
 
 %% Building Material Matrix
 
 material_mat=build_material_mat(soil_pro,soil_layers);
-% num_material = size(material_mat,1);
-
-
 
 %% Number of elements Meshing
 
@@ -72,70 +78,65 @@ element_index = meshing_domain(material_mat);
 
 %% Initilizing the outcome matrix.
 output=[];
+strmat=[];
 
-
-% for loop for the number of iteration should start from here.
-
-for eq_it=1:num_it
-
-
+for eq_it=1:num_it % Equivalent linear method's iteration
 %% updating damping and stiffness of the elements based on the strain level.
 
 element_index = update_material_pro(element_index,output,eq_it);
 
 %% Generate M and K matrix
 
-
-
 M_mat = mass_mat_gen(element_index);
 K_mat = stiffness_mat_gen(element_index);
 
 K = K_mat;
-% K = K_mat *(le/n_e)* Mu;
 M_inv = inv(M_mat);
-
-% for ii=1:size(M_inv,1)
-%     for jj=1:size(M_inv,1)
-% 
-%         if ii~=jj && abs(ii-jj)>1
-%         
-%             M_inv(ii,jj)=0;
-%             
-%         end
-%     end
-% end
 
 %% Generating Damping Matrix
 
 C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
 
 %% Boundary condition
+
 C = boundary_condition(C);
 
 %% Reporting simulation parameters
 
 sim_p = sim_parameters(dt,sim_time,sim_name,...
                        rock_soil_type,soil_pro,soil_layers,material_mat,...
-                       use_damping,input_acceleration,acc_vec_1);
+                       use_damping,input_acceleration,acc_vec_1,max_value_acc,...
+                       num_it);
 
 %% Time solution
 
-
-u = solving_time(sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
-
+output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
 
 %% Report acceleration, velocity, and displacement and simulation params
-output = waveform_gen(sim_p,u,element_index,depth_results,t1);
+
+output = waveform_gen(output,sim_p,element_index,depth_results,t1);
 
 %% Extract strain
+
 output=extract_strain_stress(output);
 
+%% saving the value of G/Gmax and damping 
+
+output = strain_damping_ggmax(output,eq_it);
+
+disp('----------------------------------------------')
+nn = sprintf('%s%s','-------> End of Iteration : ',num2str(eq_it),'.');
+disp(nn);
+disp('----------------------------------------------')
 
 % for loop for iteration should end here.
 end
 
+%% saving the run summary for quick look
+run_summary(output);
+
 sname = sprintf('%s%s%s','simulation_results/simulation_',sim_name,'.mat');
-save(sname,'output');
+save(sname,'output','-v7.3');
 
 
 
