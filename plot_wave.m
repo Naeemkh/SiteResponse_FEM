@@ -1,7 +1,8 @@
 function plot_wave(filename_list,nodenumber_list,type,color_name,lw,tlimit,flimit,filter_it,filter_type,corner_freq,cpdf)
 
-
 close(figure(1));
+
+
 for i=1:size(filename_list,2)
     
 
@@ -29,6 +30,9 @@ else
     
 end
 
+sim_time=output.simulationparams.sim_time;
+ 
+
 
 % Extracting the legend name
 legend_1 = output.simulationparams.sim_name;
@@ -44,7 +48,7 @@ color  = color_name{i};
 dt = t_wave(2,1) - t_wave(1,1);
 
 % pick 75 s of data
-NPick = floor(5 / dt);
+NPick = floor(sim_time / dt);
 t_wave = t_wave(1:NPick,:);
 
 N2          = size(t_wave,1);
@@ -120,7 +124,8 @@ f_wave_a  = fft(t_wave(:,4)*fc,NP2)/(N2); % Acceleration
 
 
 %% Plots
-figure(1);
+h=figure(1);
+set(h,'position',[100 100 1600 1200])
 subplot(3,3,[1 2])
 plot(t_wave(:,1),t_wave(:,2)*fc,'color',color,'Linewidth',lw)
 hold on

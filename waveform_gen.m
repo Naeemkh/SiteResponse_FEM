@@ -40,6 +40,8 @@ output.simulationparams.max_s_element=max(element_index(:,5)-element_index(:,4))
 output.simulationparams.min_s_element=min(element_index(:,5)-element_index(:,4));
 
 u = output.nodetime;
+sol_type = sim_p.solution_type;
+
 
 % Displacement, Velocity, and Acceleration of the base
 
@@ -56,7 +58,27 @@ vel_gr    = cumtrapz(acc_gr)*dt;
 disp_gr   = cumtrapz(vel_gr)*dt;
 
 
+if strcmp(sol_type,'acc')==1
+
 for ij=1:size(node_g,1)
+    
+    disp_ab = u(node_g(ij,1),:)'; disp1 = [0; disp_ab]; % Initial displacement is zero.
+    vel_ab  = diff(disp1)/dt; vel1=[0; vel_ab];
+    acc_ab  = diff(vel1)/dt;
+    
+    disp_rel  = disp_ab + disp_gr';
+    vel_rel   = vel_ab  + vel_gr';
+    acc_rel   = acc_ab  + acc_gr';
+    
+    F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
+    F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
+    eval(F1)
+    eval(F2)
+end
+
+elseif strcmp(sol_type,'disp')==1
+   
+ for ij=1:size(node_g,1)   
     
     disp_rel = u(node_g(ij,1),:)'; disp1 = [0; disp_rel]; % Initial displacement is zero.
     vel_rel  = diff(disp1)/dt; vel1=[0; vel_rel];
@@ -70,6 +92,8 @@ for ij=1:size(node_g,1)
     F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
     eval(F1)
     eval(F2)
+ end  
+    
 end
 
 output.simulationparams.totaltime=toc(t1);  % Recording simulation time (sec)

@@ -38,21 +38,26 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 %size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
 
 soil_layers = [ 
-                2 1000   10   1
                 
+                1 3000  10   1
               ];
 
-depth_results=[1 5 100 200 500]; % Input depth that you want waveform for them.          
+depth_results=[1 5 100]; % Input depth that you want waveform for them.          
           
 %% Simulation Parameters
 
-sim_time      = 5;
-dt            = 0.0001  ;
+sim_time      = 100;
+dt            = 0.0001;
+ppw           = 14;     % Number of points per wave length
+p_0           = 0.5;    % Fraction of time increment
+f_max         = 10;     % Maximum Frequency
 use_damping   = 2;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
-input_acceleration = 'input_acc/acc_mexican_hat_10hz.txt';
+input_acceleration = 'input_acc/lahabra_41_EW_acc.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
-max_value_acc = 1;    % coefficient for maximum value of the input as % of g.
+max_value_acc = 0.4;    % coefficient for maximum value of the input as % of g.
+solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
+
 
 % Simulation Name
 serial_no = load('serial_no.txt');
@@ -65,12 +70,27 @@ disp(nn);
 
 
 acc_vec_1 = load(input_acceleration);
+% acc_vec_1 = acc_vec_1(1:5000,:);  %%%%%%%%%%%%%%%%%%%%%%%%%%  !!!!!!
 acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
+
 
 
 %% Building Material Matrix
 
 material_mat=build_material_mat(soil_pro,soil_layers);
+
+%% Numerical solution stability adjustment (See Bonilla 2005)
+
+% for ii=1:size(material_mat,1)
+%     v(ii,1)=sqrt(material_mat(ii,3)/material_mat(ii,2));
+%     dy(ii,1)=v(ii,1)/(f_max*ppw);
+%     material_mat(ii,6)=floor(dy(ii,1));
+% end
+% 
+% dy_min = min(dy(:,1));
+% v_max  = max(v(:,1));
+% dt = p_0 * dy_min / v_max;
+
 
 %% Number of elements Meshing
 
@@ -98,19 +118,19 @@ M_inv = inv(M_mat);
 C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
 
 %% Boundary condition
-
-C = boundary_condition(C);
+% 
+C = boundary_condition(C,M_mat,element_index);
 
 %% Reporting simulation parameters
 
-sim_p = sim_parameters(dt,sim_time,sim_name,...
+sim_p = sim_parameters(dt,sim_time,sim_name,solution_type,...
                        rock_soil_type,soil_pro,soil_layers,material_mat,...
                        use_damping,input_acceleration,acc_vec_1,max_value_acc,...
                        num_it);
 
 %% Time solution
 
-output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,'acc');
+output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type);
 
 %% Report acceleration, velocity, and displacement and simulation params
 
@@ -135,9 +155,10 @@ end
 %% saving the run summary for quick look
 run_summary(output);
 
+%% saving the whole simulation results
 sname = sprintf('%s%s%s','simulation_results/simulation_',sim_name,'.mat');
 save(sname,'output','-v7.3');
 
-
+disp('-------> Done!')
 
 
