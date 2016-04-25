@@ -28,7 +28,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'rock','clay','sand'};
+rock_soil_type = {'Bedrock','rock','clay','sand'};
 
 soil_pro=read_soil_input(rock_soil_type); % read the input files.
 
@@ -38,24 +38,24 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 %size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
 
 soil_layers = [ 
-                
-                1 3000  10   1
-              ];
+                4 100      1   1
+                2 2        1   1
+                               ];
 
-depth_results=[1 5 100]; % Input depth that you want waveform for them.          
+depth_results=[1 5]; % Input depth that you want waveform for them.          
           
 %% Simulation Parameters
 
-sim_time      = 100;
+sim_time      = 4;
 dt            = 0.0001;
 ppw           = 14;     % Number of points per wave length
 p_0           = 0.5;    % Fraction of time increment
 f_max         = 10;     % Maximum Frequency
-use_damping   = 2;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
-input_acceleration = 'input_acc/lahabra_41_EW_acc.txt';
+use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
+input_acceleration = 'input_acc/ricker_5Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
-max_value_acc = 0.4;    % coefficient for maximum value of the input as % of g.
+max_value_acc = 0.1;    % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
 
 
@@ -70,7 +70,6 @@ disp(nn);
 
 
 acc_vec_1 = load(input_acceleration);
-% acc_vec_1 = acc_vec_1(1:5000,:);  %%%%%%%%%%%%%%%%%%%%%%%%%%  !!!!!!
 acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
 
 
@@ -110,8 +109,6 @@ element_index = update_material_pro(element_index,output,eq_it);
 M_mat = mass_mat_gen(element_index);
 K_mat = stiffness_mat_gen(element_index);
 
-K = K_mat;
-M_inv = inv(M_mat);
 
 %% Generating Damping Matrix
 
@@ -119,7 +116,10 @@ C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
 
 %% Boundary condition
 % 
-C = boundary_condition(C,M_mat,element_index);
+[C,M_mat,K_mat,element_index] = boundary_condition(C,M_mat,K_mat,element_index);
+
+M_inv = inv(M_mat);
+K = K_mat;
 
 %% Reporting simulation parameters
 

@@ -18,6 +18,14 @@ for i=1:n_e
     m_local(2,1)=0.1666;
     m_local(2,2)=0.3333;
     
+    
+%     m_local(1,1)=0.5;
+%     m_local(1,2)=0.0;
+%     m_local(2,1)=0.0;
+%     m_local(2,2)=0.5;
+    
+    
+    
     m_local_m=m_local*(h)*rho;
     
     

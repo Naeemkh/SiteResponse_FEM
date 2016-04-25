@@ -66,9 +66,9 @@ for ij=1:size(node_g,1)
     vel_ab  = diff(disp1)/dt; vel1=[0; vel_ab];
     acc_ab  = diff(vel1)/dt;
     
-    disp_rel  = disp_ab + disp_gr';
-    vel_rel   = vel_ab  + vel_gr';
-    acc_rel   = acc_ab  + acc_gr';
+    disp_rel  = disp_ab - disp_gr';
+    vel_rel   = vel_ab  - vel_gr';
+    acc_rel   = acc_ab - acc_gr' ;
     
     F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
     F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');

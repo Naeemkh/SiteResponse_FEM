@@ -51,7 +51,7 @@ elseif strcmp(responsetype,'vel')==1
     end
     
     
-    
+
     
     
 elseif strcmp(responsetype,'acc')==1
@@ -60,13 +60,24 @@ elseif strcmp(responsetype,'acc')==1
     acc_ab  = diff(vel1,1,2)/dt;
     
     
+    
+    
+
+    
     for ij =1: nt_step/time_factor;
         plot(acc_ab(:,ij*time_factor),[element_index(:,4);element_index(end,5)] ,'linewidth',1)
         set(gca,'Ydir','reverse')
         time_step = sprintf('%2.2f%s',(ij*dt)*time_factor,' s');
         text(1, 10, time_step)
         xlim([-10 10])
-        pause(0.01)
+         pause(0.01)
+        
+
+        
+        
+        
+        
+        
         
         % file name
         %     file_name=sprintf('%s%04d%s','wave_snapshot/wave_',ij,'.png');

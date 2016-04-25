@@ -7,6 +7,8 @@ disp('-------> Solving in the time domain ...');
 pause(0.01); % Give a small break to remove figures and unnecessary variables.
 
 n_e = size(element_index,1);
+
+
 nt_step = floor(sim_time/dt);
 u=zeros(n_e+1,nt_step);
 
@@ -44,17 +46,13 @@ u=zeros(n_e+1,nt_step);
 output.acc_temp = acc_vec;  
 
 % Mu..+cu.+ku=-mug..;
-acc_vec(:,2)=acc_vec(:,2)*-1;
+acc_vec(:,2)=acc_vec(:,2)*+1;
 
   
-input_acc = acc_vec * -1;
+input_acc = acc_vec * 1;
 acc_gr    = input_acc(:,2)';
 vel_gr    = cumtrapz(acc_gr)*dt;
 disp_gr   = cumtrapz(vel_gr)*dt;
-
-
-
-
 
 
 
@@ -72,12 +70,12 @@ if strcmp(solution_type,'acc')==1
             a3= M_inv*(dt^2)*(a2+a1);
             u(:,tt)= a3+2*u(:,tt-1)-u(:,tt-2);
 
-
-
-
+%              u(end,tt)=0;
 
     end
-    
+
+
+
 elseif strcmp(solution_type,'disp')==1
     
     for tt = 3 : nt_step
