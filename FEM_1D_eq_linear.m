@@ -47,9 +47,9 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 %% Simulation Parameters
 
 sim_time      = 4;
-dt            = 0.0001;
+dt            = 0.000005;
 use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
-input_acceleration = 'input_acc/ricker_5Hz.txt';
+input_acceleration = 'input_acc/ricker_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
 max_value_acc = 0.1;    % coefficient for maximum value of the input as % of g.
