@@ -14,6 +14,11 @@ sim_time = output.simulationparams.sim_time;
 dt       = output.simulationparams.dt;
 
 u=zeros(n_e+1,nt_step);
+v=zeros(n_e+1,nt_step);
+a=zeros(n_e+1,nt_step);
+v_t=zeros(n_e+1,nt_step);
+u_t=zeros(n_e+1,nt_step);
+F  =zeros(n_e+1,nt_step);
 
 
 % Initial condition.
@@ -58,37 +63,64 @@ vel_gr    = cumtrapz(acc_gr)*dt;
 disp_gr   = cumtrapz(vel_gr)*dt;
 
 
+fem_sol='implicit';
+
+unit_vec=ones(n_e+1,1);
 
 if strcmp(solution_type,'acc')==1
-    unit_vec=ones(n_e+1,1);
     
-
-
-    
-    for tt = 3 : nt_step
+    if strcmp(fem_sol,'explicit')==1
         
-
+        
+        for tt = 3 : nt_step
+            
+            
             a1= -1*K*u(:,tt-1)-C*(u(:,tt-1)-u(:,tt-2))/dt;
             a2= M_mat*unit_vec*acc_vec(tt,2);
             a3= M_inv*(dt^2)*(a2+a1);
             u(:,tt)= a3+2*u(:,tt-1)-u(:,tt-2);
-
-%              u(end,tt)=0;
-
+            
+            %              u(end,tt)=0;
+        end
+    elseif strcmp(fem_sol,'implicit')==1
+        
+        % Newmark values
+        beta  = 1/4;
+        gamma = 1/2; 
+        
+        a(:,1)=unit_vec*acc_vec(1,2);
+        
+        for tt = 2 : nt_step
+            F(:,tt)   = M_mat*unit_vec*acc_vec(tt,2); 
+            u_t(:,tt) = u(:,tt-1)+dt*v(:,tt-1) + (1/2)*dt^2*(1-2*beta)*a(:,tt-1);
+            v_t(:,tt) = v(:,tt-1)+dt*a(:,tt-1)*(1-gamma);
+            RH        = F(:,tt) - C*v_t(:,tt)-K*u_t(:,tt);
+            W         = M_mat+C*gamma*dt+K*beta*dt^2;
+            a(:,tt)   = W\RH;
+            v(:,tt)   = v(:,tt-1)+dt*((1-gamma)*a(:,tt-1)+gamma*a(:,tt));
+            u(:,tt)   = u(:,tt-1) + dt*v(:,tt-1)+ (dt^2)*(1/2)*((1-2*beta)*a(:,tt-1)+2*beta*a(:,tt));
+                
+        end
+        
+      
+        
     end
-
-
-
+    
+    
 elseif strcmp(solution_type,'disp')==1
     
     for tt = 3 : nt_step
-            a1= -1*K*u(:,tt-1)-C*(u(:,tt-1)-u(:,tt-2))/dt;
-            a3= M_inv*(dt^2)*(a1);
-            u(:,tt)= a3+2*u(:,tt-1)-u(:,tt-2);
-            u(end,tt)=disp_gr(1,tt);
-    end       
-       
+        a1= -1*K*u(:,tt-1)-C*(u(:,tt-1)-u(:,tt-2))/dt;
+        a3= M_inv*(dt^2)*(a1);
+        u(:,tt)= a3+2*u(:,tt-1)-u(:,tt-2);
+        u(end,tt)=disp_gr(1,tt);
+    end
+    
 end
+
+
+
+
 output.nodetime=u;
 
 disp('-------> End of solving in time domain.');
