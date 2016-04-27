@@ -1,4 +1,4 @@
-function output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type)
+function output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type)
 
 % Input could be acc : acceleration  disp: displacement.
 
@@ -9,7 +9,10 @@ pause(0.01); % Give a small break to remove figures and unnecessary variables.
 n_e = size(element_index,1);
 
 
-nt_step = int64(ceil(sim_time/dt));
+nt_step  = output.simulationparams.n_timest;
+sim_time = output.simulationparams.sim_time;
+dt       = output.simulationparams.dt;
+
 u=zeros(n_e+1,nt_step);
 
 

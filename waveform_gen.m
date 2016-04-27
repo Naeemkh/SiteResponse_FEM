@@ -35,7 +35,7 @@ output.simulationparams.adjusted_acc_vec = output.acc_temp; output.acc_temp=[];
 output.element_index = element_index;
 output.simulationparams.n_element=size(element_index,1);
 output.simulationparams.n_nodes=size(element_index,1)+1;
-output.simulationparams.n_timest=t/dt;
+% output.simulationparams.n_timest=t/dt;
 output.simulationparams.max_s_element=max(element_index(:,5)-element_index(:,4));
 output.simulationparams.min_s_element=min(element_index(:,5)-element_index(:,4));
 

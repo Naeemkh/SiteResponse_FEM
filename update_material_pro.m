@@ -1,6 +1,6 @@
-function element_index = update_material_pro(element_index,output,eq_it)
+function element_index = update_material_pro(output,eq_it)
 
-
+element_index = output.element_index;
 if eq_it == 1
     
     % just skip this function
