@@ -1,4 +1,4 @@
-function output = waveform_gen(output,sim_p,element_index,depth,t1)
+function output = waveform_gen(output,element_index,depth,t1)
 
 % Last update : Feb 17 2016
 % Query the elements according to the depth.
@@ -6,8 +6,8 @@ function output = waveform_gen(output,sim_p,element_index,depth,t1)
 % in all elements I'm reporting the upper node value.
 % The code is not interpolating, it is reporting the closest node.
 
-dt=sim_p.dt;
-t =sim_p.sim_time;
+dt=output.simulationparams.dt;
+t =output.simulationparams.sim_time;
 
 element_det = zeros(size(depth,2),3);
 
@@ -30,7 +30,7 @@ output.userdepth = depth;
 
 node_g = sort(unique([node_g1;node_g2]));
 
-output.simulationparams=sim_p;
+% output.simulationparams=sim_p;
 output.simulationparams.adjusted_acc_vec = output.acc_temp; output.acc_temp=[];
 output.element_index = element_index;
 output.simulationparams.n_element=size(element_index,1);
@@ -40,15 +40,15 @@ output.simulationparams.max_s_element=max(element_index(:,5)-element_index(:,4))
 output.simulationparams.min_s_element=min(element_index(:,5)-element_index(:,4));
 
 u = output.nodetime;
-sol_type = sim_p.solution_type;
+sol_type = output.simulationparams.solution_type;
 
 
 % Displacement, Velocity, and Acceleration of the base
 
-
-disp_base = u(end,:)'; disp1 = [0; disp_base]; % Initial displacement is zero.
-vel_base  = diff(disp1)/dt; vel1=[0; vel_base];
-acc_base  = diff(vel1)/dt;
+% 
+% disp_base = u(end,:)'; disp1 = [0; disp_base]; % Initial displacement is zero.
+% vel_base  = diff(disp1)/dt; vel1=[0; vel_base];
+% acc_base  = diff(vel1)/dt;
 
 % Input vector
 input_acc = output.simulationparams.adjusted_acc_vec;
@@ -66,6 +66,7 @@ for ij=1:size(node_g,1)
     vel_ab  = diff(disp1)/dt; vel1=[0; vel_ab];
     acc_ab  = diff(vel1)/dt;
     
+        
     disp_rel  = disp_ab - disp_gr';
     vel_rel   = vel_ab  - vel_gr';
     acc_rel   = acc_ab - acc_gr' ;

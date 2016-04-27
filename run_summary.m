@@ -3,7 +3,8 @@ function run_summary(output)
 sim_time      = output.simulationparams.sim_time;
 dt            = output.simulationparams.dt;
 use_damping   = output.simulationparams.use_damping;
-num_it        = output.simulationparams.num_it;
+% num_it        = output.simulationparams.num_it;
+num_it = 1;
 max_s_element = output.simulationparams.max_s_element;
 min_s_element = output.simulationparams.min_s_element;
 wall_c_time   = output.simulationparams.totaltime;

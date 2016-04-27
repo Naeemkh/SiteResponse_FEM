@@ -9,7 +9,7 @@ pause(0.01); % Give a small break to remove figures and unnecessary variables.
 n_e = size(element_index,1);
 
 
-nt_step = floor(sim_time/dt);
+nt_step = int64(ceil(sim_time/dt));
 u=zeros(n_e+1,nt_step);
 
 

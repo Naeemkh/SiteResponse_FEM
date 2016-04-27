@@ -47,7 +47,7 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 %% Simulation Parameters
 
 sim_time      = 4;
-dt            = 0.000005;
+dt            = 0.0001;
 use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
 input_acceleration = 'input_acc/ricker_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
@@ -77,8 +77,18 @@ material_mat=build_material_mat(soil_pro,soil_layers);
 element_index = meshing_domain(material_mat);
 
 %% Initilizing the outcome matrix.
-output=[];
+
 strmat=[];
+
+%% Reporting simulation parameters
+
+output = sim_parameters(dt,sim_time,sim_name,solution_type,...
+                       rock_soil_type,soil_pro,soil_layers,material_mat,...
+                       use_damping,input_acceleration,acc_vec_1,max_value_acc,...
+                       num_it);
+                   
+                
+%%                   
 
 for eq_it=1:num_it % Equivalent linear method's iteration
 %% updating damping and stiffness of the elements based on the strain level.
@@ -102,12 +112,6 @@ C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
 M_inv = inv(M_mat);
 K = K_mat;
 
-%% Reporting simulation parameters
-
-sim_p = sim_parameters(dt,sim_time,sim_name,solution_type,...
-                       rock_soil_type,soil_pro,soil_layers,material_mat,...
-                       use_damping,input_acceleration,acc_vec_1,max_value_acc,...
-                       num_it);
 
 %% Time solution
 
@@ -115,7 +119,7 @@ output = solving_time(output,sim_time,dt,M_inv,M_mat,K,C,element_index,acc_vec_1
 
 %% Report acceleration, velocity, and displacement and simulation params
 
-output = waveform_gen(output,sim_p,element_index,depth_results,t1);
+output = waveform_gen(output,element_index,depth_results,t1);
 
 %% Extract strain
 
