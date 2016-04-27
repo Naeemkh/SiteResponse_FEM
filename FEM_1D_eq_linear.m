@@ -2,7 +2,7 @@
 % Finite element code for 1D wave propagation boundary condition problem
 % Written by: Naeem Khoshnevis (15 October 2015)
 % Email: nkhshnvs@memphis.edu
-% Last update: 3 March 2016
+% Last update: 26 April 2016
 
 clc
 clear all;
@@ -48,9 +48,6 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 
 sim_time      = 4;
 dt            = 0.0001;
-ppw           = 14;     % Number of points per wave length
-p_0           = 0.5;    % Fraction of time increment
-f_max         = 10;     % Maximum Frequency
 use_damping   = 4;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
 input_acceleration = 'input_acc/ricker_5Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
@@ -67,28 +64,12 @@ save('serial_no.txt','serial_no','-ascii');
 nn = sprintf('%s%s','-------> Simulation Number: ',num2str(serial_no));
 disp(nn);
 
-
-
 acc_vec_1 = load(input_acceleration);
 acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
-
-
 
 %% Building Material Matrix
 
 material_mat=build_material_mat(soil_pro,soil_layers);
-
-%% Numerical solution stability adjustment (See Bonilla 2005)
-
-% for ii=1:size(material_mat,1)
-%     v(ii,1)=sqrt(material_mat(ii,3)/material_mat(ii,2));
-%     dy(ii,1)=v(ii,1)/(f_max*ppw);
-%     material_mat(ii,6)=floor(dy(ii,1));
-% end
-% 
-% dy_min = min(dy(:,1));
-% v_max  = max(v(:,1));
-% dt = p_0 * dy_min / v_max;
 
 
 %% Number of elements Meshing
