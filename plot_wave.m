@@ -90,11 +90,17 @@ elseif   strcmp(ftype,'lowpass')==1
     F_F_1 = corner_freq(1);
     
     % low pass (elliptic)
-    [zl,pl,kl] = ellip(70,0.0001,35,F_F_1/(FS/2),'low');
+%     [zl,pl,kl] = ellip(70,0.0001,35,F_F_1/(FS/2),'low');
+%     [sosl,gl] = zp2sos(zl,pl,kl);	               % Convert to SOS form
+%     Hdl = dfilt.df2tsos(sosl,gl);
+
+ % low pass (elliptic)
+    [zl,pl,kl] = butter(4,F_F_1/(FS/2),'low');
     [sosl,gl] = zp2sos(zl,pl,kl);	               % Convert to SOS form
     Hdl = dfilt.df2tsos(sosl,gl);
+
     
-    for iif=2:10
+    for iif=2:4
     F_wave_l = filtfilt(sosl,gl,t_wave(:,iif));
     t_wave(:,iif) = F_wave_l;
     end

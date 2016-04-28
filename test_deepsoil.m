@@ -3,6 +3,23 @@
 FEM_rel = output.node_1.relative.TDVA(:,[1,4]);
 FEM_abs = output.node_1.absolute.TDVA(:,[1,4]);
 
+load simulation_results/Seismosoil_5p_damp.mat
+
+
+
+
+figure;
+
+plot(Seismosoil_5p_damp(:,1),Seismosoil_5p_damp(:,2)/9.81,'b')
+hold on
+plot(FEM_rel(:,1),-FEM_rel(:,2)/9.81,'r')
+legend('Seismosoil-TD','FEM-Naeem-TD')
+
+
+
+break
+
+
 load simulation_results/deepsoil_ricker_fd.mat
 load simulation_results/deepsoil_ricker_td.mat
 % input_m = load('input_acc/sin_2_5_hz_8sec.txt');

@@ -36,11 +36,12 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 
 %soil_layers --> 4 Columns : C1: soil type, C2: thick, C3: Max element
 %size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
+% Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
                 4 100      1   1
                 2 2        1   1
-                               ];
+                                ];
 
 depth_results=[1 5]; % Input depth that you want waveform for them.          
           

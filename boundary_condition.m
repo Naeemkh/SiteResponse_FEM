@@ -13,8 +13,10 @@ function [C1,M_mat1,K_mat1,element_index1]=boundary_condition(C,M_mat,K_mat,elem
 % 
 % element_index(end,:)=[];
 
-% K_mat(end,end)=0;
-
+%  K_mat(end,end)=0;
+%  K_mat(end-1,end-1)= K_mat(end-1,end-1)/2;
+%  K_mat(end,end-1)=0;
+%  K_mat(end-1,end)=0;
 
 M_mat1=M_mat;
 K_mat1=K_mat;

@@ -64,6 +64,7 @@ disp_gr   = cumtrapz(vel_gr)*dt;
 
 
 fem_sol='implicit';
+% fem_sol='explicit';
 
 unit_vec=ones(n_e+1,1);
 
