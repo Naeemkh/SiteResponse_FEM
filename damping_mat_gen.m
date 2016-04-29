@@ -52,8 +52,11 @@ switch use_damping
         
         damping_model='Freq-Independent Rayleigh';
         
-        w_n = 2*pi*0.75;  % Assuming first mode is 1 Hz
-        w_m = 2*pi*3.75; % Assuming second mode is 10 Hz
+        f_1 = 0.75;
+        f_2 = 3.75;
+        
+        w_n = 2*pi*f_1;  % Assuming first mode is 1 Hz
+        w_m = 2*pi*f_2; % Assuming second mode is 10 Hz
         
         alpha_1 = 2*(w_n*w_m)/(w_n+w_m);
         beta_1  = 2*(1/(w_n+w_m));
@@ -112,10 +115,18 @@ switch use_damping
         
         C = C_mat + M_mat_c;
         
-             
+        f = 0.01:0.01:20;
+        w = 2*pi*f;
+        sai_mass = alpha_1./(2*w);
+        sai_stif = beta_1*w/2;
+        sai_tot  = sai_mass + sai_stif; 
+        sai_mat  = [w' sai_mass' sai_stif' sai_tot'];
+        output.simulationparams.damping.FIRayleigh = sai_mat;
+        output.simulationparams.damping.w12=[w_n w_m];
+        
     case 3 
         
-        damping_model='Freq-Independent Rayleigh';
+        damping_model='Freq-dependent Rayleigh';
         
         
     case 4
@@ -131,6 +142,20 @@ end
 
 F1 = sprintf('%s%s%s','-------> ',damping_model,' damping model is selected. Generating the damping matrix ...' );
 disp(F1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+output.simulationparams.damping_model = damping_model;
 
 
 
