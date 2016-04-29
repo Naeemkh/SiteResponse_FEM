@@ -37,7 +37,8 @@ rho = element_index(end,6);
 %  C(end,end) = C(end,end) + rho*v_s*coef;
 % C(end,end) =  M_mat(end,end)*v_s*coef;
 
-  C(end,end) =rho*v_s*coef;
+   C(end,end) =rho*v_s*coef;
+
 
 C1=C;
 

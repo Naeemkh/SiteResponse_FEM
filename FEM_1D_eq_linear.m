@@ -39,8 +39,9 @@ soil_pro=read_soil_input(rock_soil_type); % read the input files.
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                4 100      1   1
-                2 2        1   1
+                4 99       1    1
+                4 1        0.1  1
+                2 0.2      0.1  1
                                 ];
 
 depth_results=[1 5]; % Input depth that you want waveform for them.          
@@ -49,7 +50,7 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 
 sim_time      = 4;
 dt            = 0.0001;
-use_damping   = 1;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3-BKT 4-None
+use_damping   = 1;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3- Freq-dependent Rayleigh 4-BKT 5-None
 input_acceleration = 'input_acc/ricker_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
@@ -105,7 +106,7 @@ K_mat = stiffness_mat_gen(element_index);
 
 %% Generating Damping Matrix
 
-C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping);
+[C,output] = damping_mat_gen(output,element_index);
 
 %% Boundary condition
 % 

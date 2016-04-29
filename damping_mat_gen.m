@@ -1,11 +1,12 @@
-function C = damping_mat_gen(M_mat,K_mat,material_mat,element_index,use_damping)
+function [C,output] = damping_mat_gen(output,element_index)
 
 % Last update: 15 February 2016
 n_e = size(element_index,1);
 
 C_mat = zeros(n_e+1,n_e+1);
 
-
+material_mat = output.simulationparams.material_mat;
+use_damping = output.simulationparams.damping.use_damping;
 
 
 switch use_damping
@@ -26,9 +27,9 @@ switch use_damping
         
         
         for i=1:n_e
-            h  = element_index(i,5)-element_index(i,4); % defining h here will help the to define elements with different size.
+            h  = element_index(i,5)-element_index(i,4);
             Mu = element_index(i,7);
-            element_damping = element_index(i,8);
+            element_damping = element_index(i,8)/100;
             
             c_local(1,1)=1;
             c_local(1,2)=-1;
@@ -51,8 +52,8 @@ switch use_damping
         
         damping_model='Freq-Independent Rayleigh';
         
-        w_n = 2*pi*1;  % Assuming first mode is 1 Hz
-        w_m = 2*pi*10; % Assuming second mode is 10 Hz
+        w_n = 2*pi*0.75;  % Assuming first mode is 1 Hz
+        w_m = 2*pi*3.75; % Assuming second mode is 10 Hz
         
         alpha_1 = 2*(w_n*w_m)/(w_n+w_m);
         beta_1  = 2*(1/(w_n+w_m));
@@ -60,12 +61,10 @@ switch use_damping
         
         % Stiffness matrix (Part Beta)
         
-        
-        
         for i=1:n_e
             h  = element_index(i,5)-element_index(i,4); % defining h here will help the to define elements with different size.
             Mu = element_index(i,7);
-            element_damping = element_index(i,8);
+            element_damping = element_index(i,8)/100;
             
             c_local(1,1)=1;
             c_local(1,2)=-1;
@@ -74,7 +73,7 @@ switch use_damping
             
             c_local_m=c_local*(1/h)*Mu*element_damping;
             
-            C_mat(i,i)     = C_mat(i,i)     +  c_local_m(1,1);
+            C_mat(i,i)     = C_mat(i,i)     +  c_local_m(1,1);                                     
             C_mat(i,i+1)   = C_mat(i,i+1)   +  c_local_m(1,2);
             C_mat(i+1,i)   = C_mat(i+1,i)   +  c_local_m(2,1);
             C_mat(i+1,i+1) = C_mat(i+1,i+1) +  c_local_m(2,2);
@@ -83,22 +82,21 @@ switch use_damping
         end
         
         C_mat = beta_1*C_mat;
+        
+        
         % Mass Matrix (Part Alpha)
-        
-        
         M_mat_c = zeros(n_e+1,n_e+1);
         
         for i=1:n_e
             h  = element_index(i,5)-element_index(i,4); % defining h here will help the to define elements with different size.
             rho = element_index(i,6);
-            element_damping = element_index(i,8);
+            element_damping = element_index(i,8)/100;
             
             m_local(1,1)=0.3333;
             m_local(1,2)=0.1666;
             m_local(2,1)=0.1666;
             m_local(2,2)=0.3333;
-            
-       
+                
             
             m_local_m=m_local*(h)*rho*element_damping;
             
@@ -115,12 +113,16 @@ switch use_damping
         C = C_mat + M_mat_c;
         
              
+    case 3 
         
-    case 3
+        damping_model='Freq-Independent Rayleigh';
+        
+        
+    case 4
         
         damping_model='BKT';
         
-    case 4
+    case 5
         
         damping_model='None';
         
@@ -131,43 +133,6 @@ F1 = sprintf('%s%s%s','-------> ',damping_model,' damping model is selected. Gen
 disp(F1);
 
 
-% switch use_damping
-%
-%     case 1
-%
-%         % computing equivalent shear wave velocity
-%
-%
-%
-%     case 2
-%
-%     case 3
-%
-%     case 4
-%
-% end
 
-
-% c_alpha = 0.00008;
-% c_beta  = 0.0008;
-%
-% % c = alpha * m + beta * k;
-%
-%
-% if use_damping == 1
-%     C = c_alpha * M_mat + c_beta * K_mat;
-%
-% size_k = size(C,1);
-%
-%     for ik=size_k-3:size_k-1
-%
-%         C(ik,ik)=200000;
-%         C(ik,ik+1)=-100000;
-%         C(ik+1,ik)=-100000;
-%         C(ik+1,ik+1)=200000;
-%
-%     end
-%
-% end
 
 end

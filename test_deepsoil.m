@@ -4,16 +4,25 @@ FEM_rel = output.node_1.relative.TDVA(:,[1,4]);
 FEM_abs = output.node_1.absolute.TDVA(:,[1,4]);
 
 load simulation_results/Seismosoil_5p_damp.mat
-
+load simulation_results/deepsoil_wd.mat
+load simulation_results/deepsoil_swd_rwod.mat
+load simulation_results/deepsoil_swd_rwod_fd.mat
+load simulation_results/deepsoil_swd_rwod_2f.mat
+load simulation_results/deepsoil_swd_rwod_2f_rd.mat
+load simulation_results/deepsoil_swd_rwod_1f.mat
 
 
 
 figure;
 
-plot(Seismosoil_5p_damp(:,1),Seismosoil_5p_damp(:,2)/9.81,'b')
+% plot(Seismosoil_5p_damp(:,1),Seismosoil_5p_damp(:,2)/9.81,'b')
 hold on
 plot(FEM_rel(:,1),-FEM_rel(:,2)/9.81,'r')
-legend('Seismosoil-TD','FEM-Naeem-TD')
+% plot(deepsoil_swd_rwod(:,1),deepsoil_swd_rwod(:,2),'k')
+plot(deepsoil_swd_rwod_1f(:,1),deepsoil_swd_rwod_1f(:,2),'k')
+% plot(deepsoil_swd_rwod_2f_rd(:,1),deepsoil_swd_rwod_2f_rd(:,2),'b')
+% plot(deepsoil_swd_rwod_2f(:,1),deepsoil_swd_rwod_2f(:,2),'g')
+legend('FEM-Naeem-TD','Deepsoil-TD','Deepsoil-TD-1')
 
 
 
