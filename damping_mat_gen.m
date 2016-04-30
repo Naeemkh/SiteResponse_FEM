@@ -115,14 +115,24 @@ switch use_damping
         
         C = C_mat + M_mat_c;
         
+        
+        
+        % temporarily the value for plotting the damping is calculated for 
+        % the first element.
+        
         f = 0.01:0.01:20;
         w = 2*pi*f;
-        sai_mass = alpha_1./(2*w);
-        sai_stif = beta_1*w/2;
+        sai_mass = alpha_1./(2*w)*element_index(1,8);
+        sai_stif = beta_1*w/2*element_index(1,8);
         sai_tot  = sai_mass + sai_stif; 
         sai_mat  = [w' sai_mass' sai_stif' sai_tot'];
         output.simulationparams.damping.FIRayleigh = sai_mat;
         output.simulationparams.damping.w12=[w_n w_m];
+        
+        
+        
+        
+        
         
     case 3 
         
