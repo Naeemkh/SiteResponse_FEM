@@ -67,41 +67,58 @@ disp_gr   = cumtrapz(vel_gr)*dt;
 if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_damping,'BKT3F')==1
     
     unit_vec=ones(n_e+1,1);
-  
+    
     
     switch use_damping
         
         case 'BKT2'
+            
+            % generating alpha, beta, gamma for each element. (Q= 1 / (2*damping))
+            
+            damping_zeta = element_index(:,8);  % damping
+            Q = 1./ (2*damping_zeta/100);
+            
+            f_max=10;
+
+            gamma_1 = 0.0373 * 2 * 3.14 * f_max;
+            gamma_2 = 0.3082 * 2 * 3.14 * f_max;
+
+            alpha_1 = (-2.656  * Q.^-0.8788 + 1.677)./Q;
+            alpha_2 = (-0.5623 * Q.^-1.03   + 1.262)./Q;
+
+            beta = (0.1876*Q.^(-0.9196)+0.6137)./(Q*2*3.14*f_max);
+            
+            % this part does not make sense, check it later
+            
+            alpha_1=[alpha_1;alpha_1(end,1)];
+            alpha_2=[alpha_2;alpha_2(end,1)];
+            beta=[beta;beta(end,1)];
             
             % Memory allocation
             
             sai_1=zeros(n_e+1,nt_step);
             sai_2=zeros(n_e+1,nt_step);
             
-            % generate the value of alpha, beta and gamma based on damping
-            alpha_1 = 0.00350;
-            alpha_2 = 0.00285;
-            beta    = 0.00136;
-            gamma_1 = 0.02340;
-            gamma_2 = 0.24140;
-                        
-            % solve in time
-            
-            for tt = 3 : nt_step 
-            
+          
+            for tt = 3 : nt_step
+                
                 F  = M_mat*unit_vec*acc_vec(tt,2);
                 
-                % Storing the whole matrix is unnecessary.
+%                 Storing the whole matrix is unnecessary.
                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
                 
-                KU = K * (u(:,tt-1) + beta * (u(:,tt-1)-u(:,tt-2))/dt -...
-                     alpha_1*gamma_1*sai_1(:,tt-1)-...
-                     alpha_2*gamma_2*sai_2(:,tt-1));
-                 
-                u(:,tt) = M_inv * (F  - KU) * dt^2 +2*u(:,tt-1) - u(:,tt-2);  
-            
+                KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+                    alpha_1.*gamma_1.*sai_1(:,tt-1)-...
+                    alpha_2.*gamma_2.*sai_2(:,tt-1));
+                
+                CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
+                
+                u(:,tt) = M_inv * (F  - KU - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
+                
+                
             end
+            
         case 'BKT3'
             
         case 'BKT3F'
@@ -110,15 +127,15 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
     
 else
     
-    fem_sol='implicit';
-    % fem_sol='explicit';
+%     fem_sol='implicit';
+    fem_sol='explicit';
     
     unit_vec=ones(n_e+1,1);
     
     if strcmp(solution_type,'acc')==1
         
         if strcmp(fem_sol,'explicit')==1
-            
+         
             
             for tt = 3 : nt_step
                 
@@ -130,6 +147,7 @@ else
                 
                 %              u(end,tt)=0;
             end
+
         elseif strcmp(fem_sol,'implicit')==1
             
             % Newmark values

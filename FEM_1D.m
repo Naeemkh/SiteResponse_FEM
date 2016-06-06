@@ -48,7 +48,7 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 %% Simulation Parameters
 
 sim_time      = 4;
-dt            = 0.00001;
+dt            = 0.0001;
 input_acceleration = 'input_acc/ricker_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
@@ -63,7 +63,7 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
-use_damping   = 'BKT2';
+use_damping   = 'FIRD';
 
 %% Running the simulation
 
