@@ -142,6 +142,7 @@ switch use_damping
          C=C_mat;
         
     case 'BKT3'
+        C=C_mat;
         
     case 'BKT3F'    
         

@@ -121,6 +121,56 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             
         case 'BKT3'
             
+            % generating alpha, beta, gamma for each element. (Q= 1 / (2*damping))
+            
+            damping_zeta = element_index(:,8);  % damping
+            Q = 1./ (2*damping_zeta/100);
+            
+            f_max=10;
+
+            gamma_1 = 0.0151 * 2 * 3.14 * f_max;
+            gamma_2 = 0.1    * 2 * 3.14 * f_max;
+            gamma_3 = 0.4814 * 2 * 3.14 * f_max;
+
+            alpha_1 = (-2.723  * Q.^-0.8206 + 1.601)./Q;
+            alpha_2 = (-1.439  * Q.^-0.9668 + 1.040)./Q;
+            alpha_3 = (-0.3037 * Q.^-0.8911 + 1.032)./Q;
+            
+
+            beta = (0.1249*Q.^(-0.804)+0.4782)./(Q*2*3.14*f_max);
+            
+            % this part does not make sense, check it later
+            
+            alpha_1=[alpha_1;alpha_1(end,1)];
+            alpha_2=[alpha_2;alpha_2(end,1)];
+            alpha_3=[alpha_3;alpha_3(end,1)];
+            beta=[beta;beta(end,1)];
+            
+            % Memory allocation
+            
+            sai_1=zeros(n_e+1,nt_step);
+            sai_2=zeros(n_e+1,nt_step);
+            sai_3=zeros(n_e+1,nt_step);
+          
+            for tt = 3 : nt_step
+                
+                F  = M_mat*unit_vec*acc_vec(tt,2);
+                
+%                 Storing the whole matrix is unnecessary.
+                sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
+                sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
+                sai_3(:,tt-1) = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3(:,tt-2));
+                
+                KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+                    alpha_1.*gamma_1.*sai_1(:,tt-1)-...
+                    alpha_2.*gamma_2.*sai_2(:,tt-1)-...
+                    alpha_3.*gamma_3.*sai_3(:,tt-1));
+                
+                CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
+                
+                u(:,tt) = M_inv * (F  - KU - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
+            end
+            
         case 'BKT3F'
             
     end
