@@ -38,9 +38,9 @@ rock_soil_type = {'Bedrock','rock','clay','sand'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                4 99       1    1
-                4 1        0.1  1
-                2 0.2      0.1  1
+                4 98       1    1
+                4 2        1    1
+                2 2        1    1
                                 ];
 
 depth_results=[1 5]; % Input depth that you want waveform for them.  
@@ -48,13 +48,22 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 %% Simulation Parameters
 
 sim_time      = 4;
-dt            = 0.0001;
-use_damping   = 2;      % 1-Simplified Rayleigh 2-Freq-Independent Rayleigh  3- Freq-dependent Rayleigh 4-BKT 5-None
+dt            = 0.00001;
 input_acceleration = 'input_acc/ricker_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
 max_value_acc = 0.1;    % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
+
+% Damping options
+% SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
+% FIRD  ==> Frequency Independent Rayleigh Damping (2 frequency Rayleigh Damping)
+% FDRD  ==> Frequency Dependent Rayleigh Damping 
+% BKT2  ==> Based on Bielak, Karaoglu and Taborda (2011) (2 Maxwell elements)
+% BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
+% BKT3F ==> Frequency dependent BKT3
+% None  ==> Without damping model.
+use_damping   = 'BKT2';
 
 %% Running the simulation
 

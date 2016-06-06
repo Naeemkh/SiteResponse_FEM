@@ -11,9 +11,9 @@ use_damping = output.simulationparams.damping.use_damping;
 
 switch use_damping
     
-    case 1
+    case 'SRD'
         
-        damping_model='Simplified Rayleigh';
+       
         
         % For more details see Hashash_2001 and Hashash_2002
         
@@ -48,9 +48,9 @@ switch use_damping
         
         C = C_mat;
         
-    case 2
+    case 'FIRD'
         
-        damping_model='Freq-Independent Rayleigh';
+        
         
         f_1 = 0.75;
         f_2 = 3.75;
@@ -131,42 +131,29 @@ switch use_damping
         
         
         
+    case 'FDRD'    
+        
+  
         
         
         
-    case 3 
+    case 'BKT2'
         
-        damping_model='Freq-dependent Rayleigh';
+         C=C_mat;
+        
+    case 'BKT3'
+        
+    case 'BKT3F'    
+        
+    case 'None'
         
         
-    case 4
-        
-        damping_model='BKT';
-        
-    case 5
-        
-        damping_model='None';
         
         C=C_mat;
 end
 
-F1 = sprintf('%s%s%s','-------> ',damping_model,' damping model is selected. Generating the damping matrix ...' );
+F1 = sprintf('%s%s%s','-------> ',use_damping,' damping model is selected. Generating the damping matrix ...' );
 disp(F1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-output.simulationparams.damping_model = damping_model;
-
 
 
 
