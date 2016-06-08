@@ -1,4 +1,4 @@
-function plot_wave(filename_list,nodenumber_list,type,color_name,lw,tlimit,flimit,filter_it,filter_type,corner_freq,cpdf)
+function plot_wave(filename_list,iteration_list,nodenumber_list,type,color_name,lw,tlimit,flimit,filter_it,filter_type,corner_freq,cpdf)
 
 close(figure(1));
 
@@ -8,23 +8,23 @@ for i=1:size(filename_list,2)
 
 output = filename_list{i};   
 nodenumber = nodenumber_list{i};
-    
+iteration = iteration_list{i};    
     
 % Extracting the time series values. 
 if strcmp(type,'absolute')==1
     
-    F1=sprintf('%s%s','noderesults=output.node_',num2str(nodenumber),'.absolute.TDVA;');
+    F1=sprintf('%s%s%s%s%s','noderesults=output.iteration.it_',num2str(iteration),'.node_',num2str(nodenumber),'.absolute.TDVA;');
     eval(F1);
     title1=sprintf('%s%s','Node Number : ',num2str(nodenumber),' - Absolute movement');
 elseif strcmp(type,'relative')==1
     
-    F1=sprintf('%s%s','noderesults=output.node_',num2str(nodenumber),'.relative.TDVA;');
+    F1=sprintf('%s%s%s%s%s','noderesults=output.iteration.it_',num2str(iteration),'.node_',num2str(nodenumber),'.relative.TDVA;');
     eval(F1);
      title1=sprintf('%s%s','Node Number : ',num2str(nodenumber),' - Relative movement');
 else
     
     warning('Type is not defined. Absolute movement is presented.')
-    F1=sprintf('%s%s','noderesults=output.node_',num2str(nodenumber),'.absolute.TDVA;');
+    F1=sprintf('%s%s%s%s%s','noderesults=output.iteration.it_',num2str(iteration),'.node_',num2str(nodenumber),'.absolute.TDVA;');
     eval(F1);
      title1=sprintf('%s%s','Node Number : ',num2str(nodenumber),' - Absolute movement');
     

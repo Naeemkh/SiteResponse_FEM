@@ -38,8 +38,8 @@ rock_soil_type = {'Bedrock','rock','clay','sand'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                2 98       1    1
-                2 2        1    1
+                4 98       1    1
+                4 2        1    1
                 2 2        1    1
                                 ];
 
@@ -47,9 +47,9 @@ depth_results=[1 5]; % Input depth that you want waveform for them.
 
 %% Simulation Parameters
 
-sim_time      = 10;
+sim_time      = 45;
 dt            = 0.0001;
-input_acceleration = 'input_acc/sin_2_5_hz_8sec.txt';
+input_acceleration = 'input_acc/gilroy_0.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.81;
 max_value_acc = 1.8;    % coefficient for maximum value of the input as % of g.
@@ -63,7 +63,7 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
-use_damping   = 'None';
+use_damping   = 'FIRD';
 
 %% Running the simulation
 

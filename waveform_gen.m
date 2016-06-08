@@ -1,4 +1,4 @@
-function output = waveform_gen(output,element_index,depth,t1)
+function output = waveform_gen(output,element_index,depth,t1,eq_it)
 
 % Last update : Feb 17 2016
 % Query the elements according to the depth.
@@ -71,8 +71,8 @@ for ij=1:size(node_g,1)
     vel_rel   = vel_ab  - vel_gr';
     acc_rel   = acc_ab - acc_gr' ;
     
-    F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
-    F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
+    F1=sprintf('%s%s%s','output.iteration.it_',num2str(eq_it),'.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
+    F2=sprintf('%s%s%s','output.iteration.it_',num2str(eq_it),'.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
     eval(F1)
     eval(F2)
 end
@@ -89,8 +89,8 @@ elseif strcmp(sol_type,'disp')==1
     vel_ab   = vel_rel  + vel_gr';
     acc_ab   = acc_rel  + acc_gr';
     
-    F1=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
-    F2=sprintf('%s%s%s','output.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
+    F1=sprintf('%s%s%s','output.iteration.it_',num2str(eq_it),'.node_',num2str(node_g(ij,1)),'.absolute.TDVA=[time disp_ab vel_ab acc_ab];');
+    F2=sprintf('%s%s%s','output.iteration.it_',num2str(eq_it),'.node_',num2str(node_g(ij,1)),'.relative.TDVA=[time disp_rel vel_rel acc_rel];');
     eval(F1)
     eval(F2)
  end  

@@ -71,7 +71,7 @@ output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_ty
 
 %% Report acceleration, velocity, and displacement and simulation params
 
-output = waveform_gen(output,element_index,depth_results,t1);
+output = waveform_gen(output,element_index,depth_results,t1,eq_it);
 
 %% Extract strain
 
@@ -80,6 +80,7 @@ output=extract_strain_stress(output);
 %% saving the value of G/Gmax and damping 
 
 output = strain_damping_ggmax(output,eq_it);
+output = transfer_function(output,eq_it);
 
 disp('----------------------------------------------')
 nn = sprintf('%s%s','-------> End of Iteration : ',num2str(eq_it),'.');
