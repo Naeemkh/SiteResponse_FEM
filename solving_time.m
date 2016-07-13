@@ -78,7 +78,7 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             damping_zeta = element_index(:,8);  % damping
             Q = 1./ (2*damping_zeta/100);
             
-            f_max=10;
+            f_max=100;
 
             gamma_1 = 0.0373 * 2 * 3.14 * f_max;
             gamma_2 = 0.3082 * 2 * 3.14 * f_max;
@@ -177,8 +177,8 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
     
 else
     
-%     fem_sol='implicit';
-    fem_sol='explicit';
+      fem_sol='implicit';
+%      fem_sol='explicit';
     
     unit_vec=ones(n_e+1,1);
     

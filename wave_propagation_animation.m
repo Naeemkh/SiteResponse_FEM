@@ -68,8 +68,8 @@ elseif strcmp(responsetype,'acc')==1
         plot(acc_ab(:,ij*time_factor),[element_index(:,4);element_index(end,5)] ,'linewidth',1)
         set(gca,'Ydir','reverse')
         time_step = sprintf('%2.2f%s',(ij*dt)*time_factor,' s');
-        text(1, 10, time_step)
-        xlim([-2 2])
+        text(0.05, 10, time_step)
+        xlim([-0.1 0.1])
          pause(0.01)
         
 

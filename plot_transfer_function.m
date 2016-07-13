@@ -1,6 +1,6 @@
 function plot_transfer_function(filename_list,iteration_list,color_name,lw,flimit,smoothing_degree)
 
-close(figure(1));
+% close(figure(1));
 
 
 for i=1:size(filename_list,2)
@@ -46,7 +46,7 @@ xlabel('Frequency(Hz)')
 % plot(TF(:,1),smoothed_data,'color',color,'Linewidth',lw);
 hold on
 legend(legend_list)
-
+grid on
 xlim(flimit)
 
 end
