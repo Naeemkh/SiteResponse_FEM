@@ -52,8 +52,8 @@ switch use_damping
         
         
         
-        f_1 = 0.75;
-        f_2 = 3.75;
+        f_1 = 1.25;
+        f_2 = 6.25;
         
         w_n = 2*pi*f_1;  % Assuming first mode is 1 Hz
         w_m = 2*pi*f_2; % Assuming second mode is 10 Hz

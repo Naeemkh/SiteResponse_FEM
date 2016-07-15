@@ -17,7 +17,7 @@ disp(nn);
 
 acc_vec_1 = load(input_acceleration);
 acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
-acc_vec_1(:,2) = acc_vec_1(:,2);
+
 
 %% Building Material Matrix
 

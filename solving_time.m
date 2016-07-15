@@ -78,7 +78,7 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             damping_zeta = element_index(:,8);  % damping
             Q = 1./ (2*damping_zeta/100);
             
-            f_max=100;
+            f_max=50;
 
             gamma_1 = 0.0373 * 2 * 3.14 * f_max;
             gamma_2 = 0.3082 * 2 * 3.14 * f_max;
@@ -96,8 +96,11 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             
             % Memory allocation
             
-            sai_1=zeros(n_e+1,nt_step);
-            sai_2=zeros(n_e+1,nt_step);
+%             sai_1=zeros(n_e+1,nt_step);
+%             sai_2=zeros(n_e+1,nt_step);
+
+            sai_1=zeros(n_e+1,1);
+            sai_2=zeros(n_e+1,1);
             
           
             for tt = 3 : nt_step
@@ -105,12 +108,22 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
                 F  = M_mat*unit_vec*acc_vec(tt,2);
                 
 %                 Storing the whole matrix is unnecessary.
-                sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
-                sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
+
+%                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
+%                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
+
+                sai_1 = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2);
+
+
+
+%                 KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+%                     alpha_1.*gamma_1.*sai_1(:,tt-1)-...
+%                     alpha_2.*gamma_2.*sai_2(:,tt-1));
                 
                 KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
-                    alpha_1.*gamma_1.*sai_1(:,tt-1)-...
-                    alpha_2.*gamma_2.*sai_2(:,tt-1));
+                    alpha_1.*gamma_1.*sai_1-...
+                    alpha_2.*gamma_2.*sai_2);
                 
                 CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
                 
@@ -148,23 +161,39 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             
             % Memory allocation
             
-            sai_1=zeros(n_e+1,nt_step);
-            sai_2=zeros(n_e+1,nt_step);
-            sai_3=zeros(n_e+1,nt_step);
+%             sai_1=zeros(n_e+1,nt_step);
+%             sai_2=zeros(n_e+1,nt_step);
+%             sai_3=zeros(n_e+1,nt_step);
+
+            sai_1=zeros(n_e+1,1);
+            sai_2=zeros(n_e+1,1);
+            sai_3=zeros(n_e+1,1);
           
             for tt = 3 : nt_step
                 
                 F  = M_mat*unit_vec*acc_vec(tt,2);
                 
 %                 Storing the whole matrix is unnecessary.
-                sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
-                sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
-                sai_3(:,tt-1) = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3(:,tt-2));
+%                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
+%                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
+%                 sai_3(:,tt-1) = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3(:,tt-2));
+
+                sai_1 = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2);
+                sai_3 = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3);
+
+
+
+%                 KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+%                     alpha_1.*gamma_1.*sai_1(:,tt-1)-...
+%                     alpha_2.*gamma_2.*sai_2(:,tt-1)-...
+%                     alpha_3.*gamma_3.*sai_3(:,tt-1));
                 
-                KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
-                    alpha_1.*gamma_1.*sai_1(:,tt-1)-...
-                    alpha_2.*gamma_2.*sai_2(:,tt-1)-...
-                    alpha_3.*gamma_3.*sai_3(:,tt-1));
+                
+                  KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+                    alpha_1.*gamma_1.*sai_1-...
+                    alpha_2.*gamma_2.*sai_2-...
+                    alpha_3.*gamma_3.*sai_3);
                 
                 CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
                 
@@ -177,8 +206,8 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
     
 else
     
-      fem_sol='implicit';
-%      fem_sol='explicit';
+     fem_sol='implicit';
+%       fem_sol='explicit';
     
     unit_vec=ones(n_e+1,1);
     
