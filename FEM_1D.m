@@ -29,7 +29,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'rock','soil_case1'};
+rock_soil_type = {'rock','sand'};
 
 %% Soil layers
 
@@ -38,24 +38,20 @@ rock_soil_type = {'rock','soil_case1'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                2 100  1 1
+                2 200  1 1
                 1 2    1 1 
                  ];
-
-
-
-
 
 depth_results=[1 5]; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
-sim_time      = 4.1;
-dt            = 0.00001;
-input_acceleration = 'input_acc/ricker_10hz_4096.txt';
+sim_time      = 8;
+dt            = 0.0001;
+input_acceleration = 'input_acc/ricker_pulse_10Hz.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
-max_value_acc = 0.1476; % coefficient for maximum value of the input as % of g.
+max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
 
 % Damping options
@@ -66,7 +62,7 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
-use_damping   = 'BKT2';
+use_damping   = 'BKT3F';
 
 %% Running the simulation
 
