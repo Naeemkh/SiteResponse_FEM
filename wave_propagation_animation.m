@@ -69,7 +69,7 @@ elseif strcmp(responsetype,'acc')==1
         set(gca,'Ydir','reverse')
         time_step = sprintf('%2.2f%s',(ij*dt)*time_factor,' s');
         text(0.05, 10, time_step)
-        xlim([-0.1 0.1])
+        xlim([-1 1])
          pause(0.01)
         
 

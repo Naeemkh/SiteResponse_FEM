@@ -7,11 +7,14 @@ if eq_it == 1
     
 else
     
-    effective_strain = output.results.effective_strain;
+    effective_strain = output.results.effective_strain *100;
     
     
     for ii=1:output.simulationparams.n_element
         
+        if element_index(ii,12) == 0  % this element is not allowed to be updated.
+            continue % the elemnt material won't be updated.
+        end
         
         f1 = sprintf('%s%s%s','soil_details = output.simulationparams.soil_pro.s_r_type_',num2str(element_index(ii,9)),';');
         eval(f1)
@@ -48,7 +51,7 @@ else
         end
         
         
-        damping = damping/100;
+        damping = damping;
         module  = module_factor * element_index(ii,11);
         
         element_index(ii,7)=module;

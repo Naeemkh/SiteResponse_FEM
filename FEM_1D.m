@@ -34,36 +34,40 @@ rock_soil_type = {'rock','sand'};
 %% Soil layers
 
 % soil_layers --> 4 Columns : C1: soil type, C2: thick, C3: Max element
-% size, C4: 1 = do equivalent linear process, 2= don't do eq linear process
+% size, C4: 1 = do equivalent linear process, 0= don't do eq linear process
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                2 200  1 1
-                1 2    1 1 
+                2 480              32 1
+                2 64               32 0 
                  ];
 
-depth_results=[1 5]; % Input depth that you want waveform for them.  
+depth_results=[32,64,96,128,160,192,224,256,288,320,352,384,416,448]; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
 sim_time      = 8;
-dt            = 0.0001;
-input_acceleration = 'input_acc/ricker_pulse_10Hz.txt';
-num_it        = 1;      % Number of iteration for equivalent linear method.
+dt            = 0.01;
+input_acceleration = 'input_acc/Zeros.txt';
+num_it        = 4;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
 
 % Damping options
 % SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
-% FIRD  ==> Frequency Independent Rayleigh Damping (2 frequency Rayleigh Damping)
+% FIRD  ==> Frequency Independent Rayleigh Damping (2 frequency Rayleigh
+% Damping) %todo: misnomer, will be changed to RD2
 % FDRD  ==> Frequency Dependent Rayleigh Damping 
 % BKT2  ==> Based on Bielak, Karaoglu and Taborda (2011) (2 Maxwell elements)
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
-use_damping   = 'BKT3F';
+use_damping   = 'BKT2';
 
+
+% * FIRD damping in this program is not frequency independent damping
+% implemented in deepsoil. I will rename this damping.
 %% Running the simulation
 
 run_fem

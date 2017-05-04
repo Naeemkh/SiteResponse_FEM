@@ -30,7 +30,7 @@ end
 
 effective_strain=max(strain_matrix,[],2);
 output.results.strain_matrix=strain_matrix;
-output.results.effective_strain = effective_strain*0.65;
+output.results.effective_strain = effective_strain*1;
 
 
 end

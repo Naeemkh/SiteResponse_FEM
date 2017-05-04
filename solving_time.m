@@ -1,4 +1,4 @@
-function output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type)
+function output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type,Force)
 
 % Input could be acc : acceleration  disp: displacement.
 
@@ -105,7 +105,15 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             
             for tt = 3 : nt_step
                 
-                F  = M_mat*unit_vec*acc_vec(tt,2);
+%                 F  = M_mat*unit_vec*acc_vec(tt,2);
+                % adding direct force 
+                
+                Force_1=Force.Force_1;
+                Force_2=Force.Force_2;
+                
+                F = zeros(n_e+1,1);
+                F(n_e+1,1) = Force_1(tt,1);
+                F(n_e,1) = -Force_2(tt,1);
                 
                 %                 Storing the whole matrix is unnecessary.
                 
@@ -132,6 +140,7 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
                 
             end
             
+            xrt = 1;
         case 'BKT3'
             
             % generating alpha, beta, gamma for each element. (Q= 1 / (2*damping))

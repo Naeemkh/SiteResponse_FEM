@@ -47,6 +47,8 @@ while end_meshing ~= 0
     element_index(i,9) = material_mat(cur_material,9); % Material_type  based on material mat matrix
     element_index(i,10) = 0; % initial effective strain.
     element_index(i,11) = material_mat(cur_material,3); % Fixed Module (Gmax)
+    element_index(i,12) = material_mat(cur_material,8); % 1: Do eq process, 0: don't do eq process
+    
     if i==1
         space_inc = min(material_mat(cur_material,6),material_mat(cur_material,5));
     else
