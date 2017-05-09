@@ -44,7 +44,7 @@ output = sim_parameters(dt,sim_time,sim_name,solution_type,...
 tf=0:dt:sim_time-dt;
                  fc =0.8;
                  z=0.04;
-                 Vs=500.0;
+                 Vs=640.0;
                  Ts=3;
                  
                 
@@ -65,8 +65,8 @@ tf=0:dt:sim_time-dt;
                 Force=(uo1+uo2)';
                 Force_2=Force*1;
                 
-Force_1 = cumsum(Force_1)*dt*5000000;  
-Force_2 = cumsum(Force_2)*dt*5000000; 
+Force_1 = cumsum(Force_1)*dt*force_coeff;  
+Force_2 = cumsum(Force_2)*dt*force_coeff; 
 output.external_force = Force_1;
 Force.Force_1=Force_1;
 Force.Force_2=Force_2;

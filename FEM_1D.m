@@ -38,21 +38,22 @@ rock_soil_type = {'rock','sand'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                2 480              32 1
-                2 64               32 0 
+                2 504              8 1
+                2 16               8 0 
                  ];
 
 depth_results=[32,64,96,128,160,192,224,256,288,320,352,384,416,448]; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
-sim_time      = 8;
-dt            = 0.01;
+sim_time      = 5;
+dt            = 0.005;
 input_acceleration = 'input_acc/Zeros.txt';
-num_it        = 4;      % Number of iteration for equivalent linear method.
+num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
+force_coeff   = 1269.0613; % temporal force coeffitient
 
 % Damping options
 % SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
