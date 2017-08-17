@@ -178,3 +178,4 @@ end
 
 end
     
+%plot_wave({output,output,output,output},{1,2,3,4},{1,1,1,1},'absolute',{'b','r','g','c'},1,[0 10],[0 3],'no','bandpass',[0.1 3],'no')

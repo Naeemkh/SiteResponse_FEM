@@ -64,35 +64,90 @@ acc_gr    = input_acc(:,2)';
 vel_gr    = cumtrapz(acc_gr)*dt;
 disp_gr   = cumtrapz(vel_gr)*dt;
 
-if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_damping,'BKT3F')==1
+if strcmp(use_damping,'BKT')==1 || strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_damping,'BKT3F')==1
     
     unit_vec=ones(n_e+1,1);
     
     
     switch use_damping
         
-        case 'BKT2'
+        case 'BKT'
             
             % generating alpha, beta, gamma for each element. (Q= 1 / (2*damping))
             
             damping_zeta = element_index(:,8);  % damping
-            Q = 1./ (2*damping_zeta/100);
+            Q = 1./ (2*damping_zeta);
             
-            f_max=10;
+            %                Qo,      alpha_1,      alpha_2,      gamma_1,      gamma_2,       beta
+            Qtable = [
+                5.00    0.211111102  0.236842104  0.032142857  0.271428571  0.1400000
+                6.25    0.188888889  0.184210526  0.039893617  0.336879433  0.1015200
+                8.33    0.157777778  0.139473684  0.045000000  0.380000000  0.0700000
+                10.00   0.137777765  0.121052630  0.032942899  0.278184480  0.0683000
+                15.00   0.097777765  0.081052630  0.032942899  0.278184480  0.0450000
+                20.00   0.078139527  0.060526314  0.031409788  0.277574872  0.0342250
+                25.00   0.064285708  0.049999999  0.031578947  0.285714286  0.0266000
+                30.00   0.053658537  0.044736842  0.026640676  0.246913580  0.0230850
+                35.00   0.046341463  0.038157895  0.027098480  0.251156642  0.0196690
+                40.00   0.040487805  0.034210526  0.025949367  0.240506329  0.0173800
+                45.00   0.036585366  0.028947368  0.031393568  0.290964778  0.0143660
+                50.00   0.032926829  0.026315789  0.032488114  0.301109350  0.0126200
+                60.00   0.027900000  0.022300000  0.027500000  0.254500000  0.0114000
+                70.00   0.024000000  0.019000000  0.032488114  0.301109350  0.0083000
+                80.00   0.020700000  0.017400000  0.025100000  0.232600000  0.0088000
+                90.00   0.018700000  0.015400000  0.024400000  0.225600000  0.0079000
+                100.00  0.017000000  0.014000000  0.028021016  0.288966725  0.0062810
+                120.00  0.014200000  0.011500000  0.028000000  0.270000000  0.0052000
+                150.00  0.011400000  0.009400000  0.024000000  0.231600000  0.0047000
+                200.00  0.008500000  0.007050000  0.022603978  0.226039783  0.0035392
+                250.00  0.006900000  0.005500000  0.026900000  0.259600000  0.0027000
+                300.00  0.005700000  0.004700000  0.027072758  0.279187817  0.0021276
+                350.00  0.004800000  0.004000000  0.024200000  0.233900000  0.0020000
+                400.00  0.004300000  0.003600000  0.021425572  0.214255718  0.0017935
+                450.00  0.003900000  0.003000000  0.028000000  0.271000000  0.0015000
+                500.00  0.003500000  0.002850000  0.023408925  0.241404535  0.0013670
+                
+                ];
             
-            gamma_1 = 0.0373 * 2 * 3.14 * f_max;
-            gamma_2 = 0.3082 * 2 * 3.14 * f_max;
+               
+            % loop over all elements 
             
-            alpha_1 = (-2.656  * Q.^-0.8788 + 1.677)./Q;
-            alpha_2 = (-0.5623 * Q.^-1.03   + 1.262)./Q;
+            alpha_1 = zeros(size(Q,1),1);
+            alpha_2 = zeros(size(Q,1),1);
+            gamma_1 = zeros(size(Q,1),1);
+            gamma_2 = zeros(size(Q,1),1);
+            beta    = zeros(size(Q,1),1);
             
-            beta = (0.1876*Q.^(-0.9196)+0.6137)./(Q*2*3.14*f_max);
+            for ie = 1 : size(Q,1)
             
-            % this part does not make sense, check it later
+                q_index = Search_Quality_Table(Qtable,Q(ie,1));
+                
+                if q_index == -1
+                  alpha_1(ie,1) = 0; 
+                  alpha_2(ie,1) = 0; 
+                  gamma_1(ie,1) = 0;
+                  gamma_2(ie,1) = 0;
+                  beta(ie,1)    = 0;
+                else
+                  alpha_1(ie,1) = Qtable(q_index,2);  
+                  alpha_2(ie,1) = Qtable(q_index,3);   
+                  gamma_1(ie,1) = Qtable(q_index,4);  
+                  gamma_2(ie,1) = Qtable(q_index,5); 
+                  beta(ie,1)    = Qtable(q_index,6); 
+                    
+                end
+                
+                               
+            end
+            
+                        % this part does not make sense, check it later
             
             alpha_1=[alpha_1;alpha_1(end,1)];
             alpha_2=[alpha_2;alpha_2(end,1)];
+            gamma_1=[gamma_1;gamma_1(end,1)];
+            gamma_2=[gamma_2;gamma_2(end,1)];
             beta=[beta;beta(end,1)];
+
             
             % Memory allocation
             
@@ -105,8 +160,8 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
             
             for tt = 3 : nt_step
                 
-%                 F  = M_mat*unit_vec*acc_vec(tt,2);
-                % adding direct force 
+                %                 F  = M_mat*unit_vec*acc_vec(tt,2);
+                % adding direct force
                 
                 Force_1=Force.Force_1;
                 Force_2=Force.Force_2;
@@ -120,8 +175,8 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
                 %                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
                 %                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
                 
-                sai_1 = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1);
-                sai_2 = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2);
+                sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
                 
                 
                 
@@ -130,8 +185,75 @@ if strcmp(use_damping,'BKT2')==1 || strcmp(use_damping,'BKT3')==1 || strcmp(use_
                 %                     alpha_2.*gamma_2.*sai_2(:,tt-1));
                 
                 KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
-                    alpha_1.*gamma_1.*sai_1-...
-                    alpha_2.*gamma_2.*sai_2);
+                    sum(alpha_1.*gamma_1.*sai_1)-...
+                    sum(alpha_2.*gamma_2.*sai_2));
+                
+                CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
+                
+                u(:,tt) = M_inv * (F  - KU - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
+                
+                
+            end
+            
+%             xrt = 1;
+            
+            
+            
+            
+        case 'BKT2'
+            
+            % generating alpha, beta, gamma for each element. (Q= 1 / (2*damping))
+            
+            
+            alpha_1 = output.damping_param.bkt2.alpha_1;
+            alpha_2 = output.damping_param.bkt2.alpha_2;
+            
+            gamma_1 = output.damping_param.bkt2.gamma_1;
+            gamma_2 = output.damping_param.bkt2.gamma_2;
+            
+            beta = output.damping_param.bkt2.beta;
+            
+            % Memory allocation
+            
+            %             sai_1=zeros(n_e+1,nt_step);
+            %             sai_2=zeros(n_e+1,nt_step);
+            
+            sai_1=zeros(n_e+1,1);
+            sai_2=zeros(n_e+1,1);
+            
+            
+            for tt = 3 : nt_step
+                
+                %                 F  = M_mat*unit_vec*acc_vec(tt,2);
+                % adding direct force
+                
+                Force_1=Force.Force_1;
+                Force_2=Force.Force_2;
+                
+                F = zeros(n_e+1,1);
+                F(n_e+1,1) = Force_1(tt,1);
+                F(n_e,1) = -Force_2(tt,1);
+                
+                %                 Storing the whole matrix is unnecessary.
+                
+                %                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
+                %                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
+                
+             
+              sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
+              sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
+                
+
+                
+                
+                
+                %                 KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+                %                     alpha_1.*gamma_1.*sai_1(:,tt-1)-...
+                %                     alpha_2.*gamma_2.*sai_2(:,tt-1));
+                
+                KU = K * (u(:,tt-1) + beta .* (u(:,tt-1)-u(:,tt-2))./dt -...
+                     (alpha_1.*gamma_1.*sai_1)-...
+                     (alpha_2.*gamma_2.*sai_2));
                 
                 CU_dot = C*(u(:,tt-1)-u(:,tt-2))/dt;
                 
@@ -345,6 +467,41 @@ end
 output.nodetime=u;
 
 disp('-------> End of solving in time domain.');
+
+
+end
+
+
+
+function q_index = Search_Quality_Table(Qtable,Q)
+if ( Q > 525 )
+    q_index = -1;
+end
+
+if ( ( Q > 475 ) && ( Q <= 525 ) )
+    q_index = size(Qtable,1);
+end
+
+if (Q <= 475)
+    
+%     range = int(Q / 5);
+    min = 1000;
+    
+    for i = 2:size(Qtable,1)
+        
+        diff = abs(Q - QTABLE(i,1));
+        
+        
+        if(diff < min)
+            min = diff;
+            
+        else
+            
+            q_index = i-1;
+        end
+    end
+    
+end
 
 
 end

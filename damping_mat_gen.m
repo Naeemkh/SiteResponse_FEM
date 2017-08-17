@@ -52,7 +52,7 @@ switch use_damping
         
         
         
-        f_1 = 1.25;
+        f_1 = 2.0;
         f_2 = 6.25;
         
         w_n = 2*pi*f_1;  % Assuming first mode is 1 Hz
@@ -120,10 +120,10 @@ switch use_damping
         % temporarily the value for plotting the damping is calculated for 
         % the first element.
         
-        f = 0.01:0.01:20;
+        f = 0.01:0.01:2.4;
         w = 2*pi*f;
-        sai_mass = alpha_1./(2*w)*element_index(1,8);
-        sai_stif = beta_1*w/2*element_index(1,8);
+        sai_mass = alpha_1./(2*w)*element_index(1,8)/100;
+        sai_stif = beta_1*w/2*element_index(1,8)/100;
         sai_tot  = sai_mass + sai_stif; 
         sai_mat  = [w' sai_mass' sai_stif' sai_tot'];
         output.simulationparams.damping.FIRayleigh = sai_mat;
@@ -134,12 +134,56 @@ switch use_damping
     case 'FDRD'    
         
   
-        
-        
-        
+    case 'BKT'    
+         C=C_mat;
+         
     case 'BKT2'
         
          C=C_mat;
+         
+         % -------
+            damping_zeta = element_index(:,8);  % damping
+            Q = 1./ (2*damping_zeta/100);
+            
+            f_max=2.4;
+            
+            gamma_1 = 0.0373 * 2 * 3.14 * f_max;
+            gamma_2 = 0.3082 * 2 * 3.14 * f_max;
+            
+            alpha_1 = (-2.656  * Q.^-0.8788 + 1.677)./Q;
+            alpha_2 = (-0.5623 * Q.^-1.03   + 1.262)./Q;
+            
+            beta = (0.1876*Q.^(-0.9196)+0.6137)./(Q*2*3.14*f_max);
+            
+            % this part does not make sense, check it later
+            
+            alpha_1=[alpha_1;alpha_1(end,1)];
+            alpha_2=[alpha_2;alpha_2(end,1)];
+            beta=[beta;beta(end,1)];
+            
+            
+            % shear velocity adjustment
+            % --------------------------
+            reference_f = 0;
+            
+            w = reference_f ./ f_max;
+		    w2 = w .* w;
+            
+            shear_vel_corr_factor = sqrt( 1. - (alpha_1 * gamma_1 * gamma_1 / (gamma_1 * gamma_1 + w2) + alpha_2 * gamma_2 * gamma_2 / (gamma_2 * gamma_2 + w2)));
+            shear_mod_corr_factor = shear_vel_corr_factor.^2;
+            
+%              element_index(:,7) = shear_mod_corr_factor(1:end-1,:) .* element_index(:,7);
+
+            element_index(:,7) = 1*element_index(:,7);
+
+            bkt2.alpha_1 = alpha_1;
+            bkt2.alpha_2 = alpha_2;
+            bkt2.gamma_1 = gamma_1;
+            bkt2.gamma_2 = gamma_2;
+            bkt2.beta    = beta;
+            
+            output.element_index = element_index;
+            output.damping_param.bkt2 = bkt2;
         
     case 'BKT3'
         C=C_mat;

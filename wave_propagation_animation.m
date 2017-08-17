@@ -17,7 +17,7 @@ if strcmp(responsetype,'disp')==1
         set(gca,'Ydir','reverse')
         time_step = sprintf('%2.2f%s',(ij*dt)*time_factor,' s');
         text(1, 10, time_step)
-        xlim([-10 10])
+        xlim([-0.001 0.001])
         pause(0.01)
         
         % file name
@@ -69,7 +69,7 @@ elseif strcmp(responsetype,'acc')==1
         set(gca,'Ydir','reverse')
         time_step = sprintf('%2.2f%s',(ij*dt)*time_factor,' s');
         text(0.05, 10, time_step)
-        xlim([-1 1])
+        xlim([-0.001 0.001])
          pause(0.01)
         
 

@@ -57,8 +57,8 @@ else
         element_index(ii,7)=module;
         element_index(ii,8)=damping; 
         
-        
-        
+%         xx = sprintf('%s',num2str(module_factor));
+%         disp(xx)
         
         
     end

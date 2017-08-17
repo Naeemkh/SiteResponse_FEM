@@ -29,7 +29,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'rock','sand'};
+rock_soil_type = {'rock','sand','sand2'};
 
 %% Soil layers
 
@@ -38,28 +38,31 @@ rock_soil_type = {'rock','sand'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 
-                2 504              8 1
-                2 16               8 0 
+                2 496                  8 1
+                2 16                   8 0 
                  ];
 
-depth_results=[32,64,96,128,160,192,224,256,288,320,352,384,416,448]; % Input depth that you want waveform for them.  
+depth_results=8:8:496; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
-sim_time      = 5;
-dt            = 0.005;
+sim_time      = 10;
+dt            = 0.001;
 input_acceleration = 'input_acc/Zeros.txt';
-num_it        = 1;      % Number of iteration for equivalent linear method.
+num_it        = 7;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
-force_coeff   = 1269.0613; % temporal force coeffitient
+force_coeff   = (1105920000/8)*0.1; % temporal force coeffitient (mu/h)
+timeshift     = (8/640/dt); %temporal time shift (h/vs/dt)
+
 
 % Damping options
 % SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
 % FIRD  ==> Frequency Independent Rayleigh Damping (2 frequency Rayleigh
 % Damping) %todo: misnomer, will be changed to RD2
 % FDRD  ==> Frequency Dependent Rayleigh Damping 
+% BKT   ==> Based on Bielak, Karaoglu and Taborda (2011) (Q from table)
 % BKT2  ==> Based on Bielak, Karaoglu and Taborda (2011) (2 Maxwell elements)
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
