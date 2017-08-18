@@ -29,7 +29,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'rock','sand','sand2'};
+rock_soil_type = {'rock','sand','sand2','sand3'};
 
 %% Soil layers
 
@@ -40,9 +40,11 @@ rock_soil_type = {'rock','sand','sand2'};
 
 DRM_e_size = 8;
 DRM_e_vs   = 640;
+DRM_e_mu   = 1105920000;
 
-soil_layers = [ 
-                2 496                            8          1
+soil_layers = [ 4 80                             8          1
+                3 120                            8          1
+                2 296                            8          1
                 2 DRM_e_size*2                   DRM_e_size 0 
                  ];
 
@@ -57,7 +59,7 @@ num_it        = 7;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
-force_coeff   = (1105920000/DRM_e_size)*0.1; % temporal force coeffitient (mu/h)
+force_coeff   = (DRM_e_mu/DRM_e_size)*0.1; % temporal force coeffitient (mu/h)
 timeshift     = (DRM_e_size/DRM_e_vs/dt); %temporal time shift (h/vs/dt)
 
 
