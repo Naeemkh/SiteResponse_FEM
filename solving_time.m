@@ -224,24 +224,19 @@ if strcmp(use_damping,'BKT')==1 || strcmp(use_damping,'BKT2')==1 || strcmp(use_d
             
             for tt = 3 : nt_step
                 
-                %                 F  = M_mat*unit_vec*acc_vec(tt,2);
+                F  = M_mat*unit_vec*acc_vec(tt,2);
                 % adding direct force
                 
-                Force_1=Force.Force_1;
-                Force_2=Force.Force_2;
+                %                 Force_1=Force.Force_1;
+                %                 Force_2=Force.Force_2;
+                %                 
+                %                 F = zeros(n_e+1,1);
+                %                 F(n_e+1,1) = Force_1(tt,1);
+                %                 F(n_e,1) = -Force_2(tt,1);
                 
-                F = zeros(n_e+1,1);
-                F(n_e+1,1) = Force_1(tt,1);
-                F(n_e,1) = -Force_2(tt,1);
-                
-                %                 Storing the whole matrix is unnecessary.
-                
-                %                 sai_1(:,tt-1) = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1(:,tt-2));
-                %                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
-                
-             
-              sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
-              sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
+
+                sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
                 
 
                 
@@ -309,9 +304,9 @@ if strcmp(use_damping,'BKT')==1 || strcmp(use_damping,'BKT2')==1 || strcmp(use_d
                 %                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
                 %                 sai_3(:,tt-1) = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3(:,tt-2));
                 
-                sai_1 = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1);
-                sai_2 = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2);
-                sai_3 = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3);
+                sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
+                sai_3 = (dt/2)*((1-dt*gamma_3).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt).*(sai_3);
                 
                 
                 
@@ -378,9 +373,9 @@ if strcmp(use_damping,'BKT')==1 || strcmp(use_damping,'BKT2')==1 || strcmp(use_d
                 %                 sai_2(:,tt-1) = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2(:,tt-2));
                 %                 sai_3(:,tt-1) = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3(:,tt-2));
                 
-                sai_1 = (dt/2)*((1-dt*gamma_1)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt)*(sai_1);
-                sai_2 = (dt/2)*((1-dt*gamma_2)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt)*(sai_2);
-                sai_3 = (dt/2)*((1-dt*gamma_3)*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt)*(sai_3);
+                sai_1 = (dt/2)*((1-dt*gamma_1).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_1*dt).*(sai_1);
+                sai_2 = (dt/2)*((1-dt*gamma_2).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_2*dt).*(sai_2);
+                sai_3 = (dt/2)*((1-dt*gamma_3).*u(:,tt-1)+u(:,tt-2))+exp(-gamma_3*dt).*(sai_3);
                 
                 
                 

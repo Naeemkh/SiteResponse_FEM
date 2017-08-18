@@ -69,6 +69,7 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
+
 use_damping   = 'BKT2';
 
 
