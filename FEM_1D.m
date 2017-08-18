@@ -35,11 +35,15 @@ rock_soil_type = {'rock','sand','sand2'};
 
 % soil_layers --> 4 Columns : C1: soil type, C2: thick, C3: Max element
 % size, C4: 1 = do equivalent linear process, 0= don't do eq linear process
-% Bedrock should have two elements to be considered. 
+% Bedrock should have two elements to be considered.
+
+
+DRM_e_size = 8;
+DRM_e_vs   = 640;
 
 soil_layers = [ 
-                2 496                  8 1
-                2 16                   8 0 
+                2 496                            8          1
+                2 DRM_e_size*2                   DRM_e_size 0 
                  ];
 
 depth_results=8:8:496; % Input depth that you want waveform for them.  
@@ -53,8 +57,8 @@ num_it        = 7;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
-force_coeff   = (1105920000/8)*0.1; % temporal force coeffitient (mu/h)
-timeshift     = (8/640/dt); %temporal time shift (h/vs/dt)
+force_coeff   = (1105920000/DRM_e_size)*0.1; % temporal force coeffitient (mu/h)
+timeshift     = (DRM_e_size/DRM_e_vs/dt); %temporal time shift (h/vs/dt)
 
 
 % Damping options
