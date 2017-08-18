@@ -47,12 +47,12 @@ depth_results=8:8:496; % Input depth that you want waveform for them.
 
 %% Simulation Parameters
 
-sim_time      = 10;
+sim_time      = 40;
 dt            = 0.001;
-input_acceleration = 'input_acc/Zeros.txt';
-num_it        = 7;      % Number of iteration for equivalent linear method.
+input_acceleration = 'input_acc/gilroy.txt';
+num_it        = 4;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
-max_value_acc = 1; % coefficient for maximum value of the input as % of g.
+max_value_acc = -1;      % coefficient for maximum value of the input as % of g. (use -1 for using original value)
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
 
 %force_coeff   = (1105920000/8)*0.1; % temporal force coeffitient (mu/h)
@@ -61,8 +61,7 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 
 % Damping options
 % SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
-% FIRD  ==> Frequency Independent Rayleigh Damping (2 frequency Rayleigh
-% Damping) %todo: misnomer, will be changed to RD2
+% RD2   ==> Extended Rayleigh Damping (2 frequency)
 % FDRD  ==> Frequency Dependent Rayleigh Damping 
 % BKT   ==> Based on Bielak, Karaoglu and Taborda (2011) (Q from table)
 % BKT2  ==> Based on Bielak, Karaoglu and Taborda (2011) (2 Maxwell elements)

@@ -15,9 +15,12 @@ save('serial_no.txt','serial_no','-ascii');
 nn = sprintf('%s%s','-------> Simulation Number: ',num2str(serial_no));
 disp(nn);
 
+if max_value_acc == -1
+acc_vec_1 = load(input_acceleration);
+else
 acc_vec_1 = load(input_acceleration);
 acc_vec_1(:,2)=(acc_vec_1(:,2)/abs(max(acc_vec_1(:,2))))*max_value_acc*g;
-
+end
 
 %% Building Material Matrix
 
@@ -112,7 +115,7 @@ K = K_mat;
 
 %% Time solution
 
-output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type,Force);
+output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type);
 
 %% Report acceleration, velocity, and displacement and simulation params
 

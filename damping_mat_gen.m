@@ -48,7 +48,7 @@ switch use_damping
         
         C = C_mat;
         
-    case 'FIRD'
+    case 'RD2'
         
         
         

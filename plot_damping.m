@@ -3,7 +3,7 @@ function plot_damping(output,element_no,plot_Q_D)
 damping_model = output.simulationparams.damping.use_damping;
 
 
-if strcmp(damping_model,'FIRD')==1
+if strcmp(damping_model,'RD2')==1
 
     dp = output.simulationparams.damping.FIRayleigh;
     w12 = output.simulationparams.damping.w12;

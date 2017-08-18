@@ -1,4 +1,4 @@
-function output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type,Force)
+function output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type)
 
 % Input could be acc : acceleration  disp: displacement.
 
