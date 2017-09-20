@@ -196,6 +196,12 @@ switch use_damping
         
         
         C=C_mat;
+        
+    case 'Nonlinear'
+        
+        
+        
+        C=C_mat;     
 end
 
 F1 = sprintf('%s%s%s','-------> ',use_damping,' damping model is selected. Generating the damping matrix ...' );

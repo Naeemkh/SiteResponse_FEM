@@ -42,9 +42,10 @@ DRM_e_size = 8;
 DRM_e_vs   = 640;
 DRM_e_mu   = 1105920000;
 
-soil_layers = [ 4 80                             8          1
-                3 120                            8          1
-                2 296                            8          1
+soil_layers = [ 2 80                             8          1
+                2 120                            8          1
+                2 286                            8          1
+                2 10                             8          0
                 2 DRM_e_size*2                   DRM_e_size 0 
                  ];
 
@@ -52,14 +53,14 @@ depth_results=8:8:496; % Input depth that you want waveform for them.
 
 %% Simulation Parameters
 
-sim_time      = 10;
+sim_time      = 8;
 dt            = 0.001;
 input_acceleration = 'input_acc/Zeros.txt';
-num_it        = 7;      % Number of iteration for equivalent linear method.
+num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = 1; % coefficient for maximum value of the input as % of g.
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
-force_coeff   = (DRM_e_mu/DRM_e_size)*0.1; % temporal force coeffitient (mu/h)
+force_coeff   = (DRM_e_mu/DRM_e_size)*0.01; % temporal force coeffitient (mu/h)
 timeshift     = (DRM_e_size/DRM_e_vs/dt); %temporal time shift (h/vs/dt)
 
 
@@ -73,6 +74,8 @@ timeshift     = (DRM_e_size/DRM_e_vs/dt); %temporal time shift (h/vs/dt)
 % BKT3  ==> Based on Taborda, Huda, Khoshnevis and Bielak (2017) (3 Maxwell elements)
 % BKT3F ==> Frequency dependent BKT3
 % None  ==> Without damping model.
+% Nonlinear ==> Will use nonlinear approach.
+
 use_damping   = 'BKT2';
 
 
