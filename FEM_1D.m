@@ -44,8 +44,7 @@ DRM_e_mu   = 1105920000;
 
 soil_layers = [ 2 80                             8          1
                 2 120                            8          1
-                2 286                            8          1
-                2 10                             8          0
+                2 296                            8          1
                 2 DRM_e_size*2                   DRM_e_size 0 
                  ];
 
@@ -54,7 +53,7 @@ depth_results=8:8:496; % Input depth that you want waveform for them.
 %% Simulation Parameters
 
 sim_time      = 8;
-dt            = 0.001;
+dt            = 0.0001;
 input_acceleration = 'input_acc/Zeros.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.80665;

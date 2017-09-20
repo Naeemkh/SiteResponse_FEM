@@ -411,8 +411,8 @@ elseif strcmp(use_damping,'Nonlinear') == 1
                 Force_1=Force.Force_1;
                 Force_2=Force.Force_2;
                 
-%                     Force_1= Force_1(433:end,1);
-%                     Force_2= Force_2(433:end,1);
+%                        Force_1= Force_1(433:end,1);
+%                        Force_2= Force_2(433:end,1);
             
                 F = zeros(n_e+1,1);
                 Fnl = F * 0;         % force from nonlinear contribution
@@ -424,68 +424,7 @@ elseif strcmp(use_damping,'Nonlinear') == 1
                 strain_matrix_0 = zeros(n_e,1);
                 
 
-% %%%%%%%%% with k matrix involved  (strat)              
-%             for tt = 3 : nt_step
-%                 
-% 
-%                 F(n_e+1,1) = Force_1(tt,1);
-%                 F(n_e,1)   = -Force_2(tt,1);
-%                 
-%                 KU = K * (u(:,tt-1));
-%                 
-%                 CU_dot = (C*(u(:,tt-1)-u(:,tt-2))/dt);
-%                 
-%                 u(:,tt) = M_inv * (F + Fnl  - KU - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
-%                 
-%                 % extract total strain
-%                 strain_matrix = extract_strain_stress_nonlin(u(:,tt),output);
-%                 
-%                 % placticity assumptions
-%                 
-%                 ep = zeros(3,3);
-%                 ep_barn = 0;
-%                 alpha_n = zeros(3,3);
-%                 sigma0 = zeros(3,3);
-%                 soo = zeros(3,3);
-% 
-%                 
-%                 for il = 1: nl_e_n % only generate force for nonlinear elements
-%                     k =  100;
-%                     psi = 0.15;
-%                     mu  = element_index(il,7); % N/m2 (kgm/s2)
-%                     H_kin = psi*mu;
-%                     Su = 10000; % (underained strength(N)
-%                     nu = 0.3; % poisson
-%                     E= mu*(2*(1+nu));
-%                     lambda = E*nu/((1+nu)*(1-2*nu));
-%                     kappa  = lambda + 2*mu/3;
-% 
-%                                  
-%                     G = mu; %KN/m2 
-%                     Ez  = strain_matrix(il,1);
-%                     Ez0 = strain_matrix_0(il,1); % strain of t-1 
-%                     e_n = [0 Ez 0; Ez 0 0; 0 0 0];
-%                     e_n0= [0 Ez0 0; Ez0 0 0; 0 0 0];
-%                     
-%                     [fs,epl,sigma,alpha, ep_bar, dl, load_unl] = ...
-%                         vonMises_ArmstrongFrederick_KinematicHrd_D2(k,H_kin, Su, kappa, G, e_n, ep, ep_barn, alpha_n, sigma0, soo, e_n0);
-%                     
-%                     strain_matrix_0 = strain_matrix;
-%                     
-%                     % update Fnl
-%                     
-%                     w_g = 1;
-%                     el_size = element_index(il,5) - element_index(il,4);
-%                     B = [-1;1];%/el_size;
-%                     Fnl_local = w_g .* (B*sigma(2,1)); 
-%                     Fnl(il:il+1,1) = Fnl(il:il+1,1)+Fnl_local;
-%                     
-%                   
-%                     
-%                 end
-%             end
-            
-%%%%%%%%% with k matrix involved  (end)  
+
     
 %%%%%%%%% without k matrix involved  (strat)      
 
@@ -508,17 +447,18 @@ elseif strcmp(use_damping,'Nonlinear') == 1
                 
                  KU = K * (u(:,tt-1));
                 
-%                  CU_dot = (C*(u(:,tt-1)-u(:,tt-2))/dt);
+                  CU_dot = (C*(u(:,tt-1)-u(:,tt-2))/dt);
                 
 %                 u(:,tt) = M_inv * (F + Fnl  - KU - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
-                 u(:,tt) = M_inv * (F - KU) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
+                 u(:,tt) = M_inv * (F - Fnl - CU_dot) * dt^2 +2*u(:,tt-1) - u(:,tt-2);
                 
                 % extract total strain
                 strain_matrix = extract_strain_stress_nonlin(u(:,tt-1),output);
                 
                 
-
-                
+%                 plot(strain_matrix)
+%                 pause;
+                Fnl = Fnl * 0;
                 for il = 1: n_e % only generate force for nonlinear elements
 %                     k =  1000;
 %                     psi = 0.15;
@@ -560,13 +500,15 @@ elseif strcmp(use_damping,'Nonlinear') == 1
 
                     
                 end
-% %                 
+%                 
 %                 figure(1)
 %                 plot(KU);
 %                 hold on 
-%                 plot(Fnl,'r');
-%                 pause;
-%                 close all 
+%                 plot(Fnl,':r');
+%                 pause(0.05);
+%                 hold off
+                
+%                 tt
             end
             
 %%%%%%%%% without k matrix involved  (end)  

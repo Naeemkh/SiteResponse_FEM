@@ -107,15 +107,15 @@ K_mat = stiffness_mat_gen(element_index);
 [C,M_mat,K_mat,element_index] = boundary_condition(C,M_mat,K_mat,element_index);
 
 M_inv = inv(M_mat);
-%K = K_mat;
+K = K_mat;
 
 %% Nonlinear status initiation
 
-[C,K_mat,nl_e_n] = nonlinear_stat_init(C,K_mat,element_index);
+% [C,K_mat,nl_e_n] = nonlinear_stat_init(C,K_mat,element_index);
 
-K = K_mat;
+% K = K_mat;
 %% Time solution
-
+nl_e_n =1;
 output = solving_time(output,M_inv,M_mat,K,C,element_index,acc_vec_1,solution_type,Force,nl_e_n);
 
 %% Report acceleration, velocity, and displacement and simulation params
