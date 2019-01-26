@@ -29,7 +29,7 @@ t1=tic;
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: Gmax, c3: rho c4:damping 
 % soil_prop.txt  ----> 4 columns c1: Vmax, c2: rho,  c3:damping 
 
-rock_soil_type = {'rock','sand','sand2','sand3'};
+rock_soil_type = {'rock','sand'};
 
 %% Soil layers
 
@@ -37,20 +37,20 @@ rock_soil_type = {'rock','sand','sand2','sand3'};
 % size, C4: 1 = do equivalent linear process, 0= don't do eq linear process
 % Bedrock should have two elements to be considered. 
 
-soil_layers = [ 4 80                   8 1
-                3 120                  8 1
+soil_layers = [ 2 80                   8 1
+                2 120                  8 1
                 2 296                  8 1
                 2 16                   8 0 
                  ];
 
-depth_results=8:8:496; % Input depth that you want waveform for them.  
+depth_results = 4; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
 sim_time      = 40;
 dt            = 0.001;
-input_acceleration = 'input_acc/gilroy.txt';
-num_it        = 4;      % Number of iteration for equivalent linear method.
+input_acceleration = 'input_acc/acc_mexican_hat.txt';
+num_it        = 5;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = -1;      % coefficient for maximum value of the input as % of g. (use -1 for using original value)
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
