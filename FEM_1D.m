@@ -37,19 +37,19 @@ rock_soil_type = {'rock','sand'};
 % size, C4: 1 = do equivalent linear process, 0= don't do eq linear process
 % Bedrock should have two elements to be considered. 
 
-soil_layers = [ 2 80                   8 1
+soil_layers = [ 2 100                  8 1
                 2 120                  8 1
                 2 296                  8 1
-                2 16                   8 0 
+                1 16                   8 0 
                  ];
 
-depth_results = 4; % Input depth that you want waveform for them.  
+depth_results = [0,12]; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
-sim_time      = 40;
+sim_time      = 50;
 dt            = 0.001;
-input_acceleration = 'input_acc/acc_mexican_hat.txt';
+input_acceleration = 'input_acc/gilroy_0.txt';
 num_it        = 5;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
 max_value_acc = -1;      % coefficient for maximum value of the input as % of g. (use -1 for using original value)

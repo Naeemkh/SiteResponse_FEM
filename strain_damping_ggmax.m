@@ -6,7 +6,13 @@ element_index = output.element_index;
 
 for i=1:size(userdepth,1)
 
-     temp_depth = max(element_index(element_index(:,4) < userdepth(i,1),4));
+    if userdepth(i,1) == 0
+        temp_depth = 0;
+    else
+        temp_depth = max(element_index(element_index(:,4) < userdepth(i,1),4));
+    end
+    
+    
      element_num = element_index(element_index(:,4)==temp_depth,1);
      
      
