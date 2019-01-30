@@ -2,19 +2,18 @@
 % Finite element code for 1D wave propagation boundary condition problem
 % Written by: Naeem Khoshnevis (15 October 2015)
 % Email: nkhshnvs@memphis.edu
-% Last update: 26 April 2016
+% Last update: 29 Jan 2019
 
 clc
-clear all;
+clear
 close all;
 
 %% 
 disp('                                   * * *                                ');
 disp(' Finite element code for 1D wave propagation boundary condition problem ');
 disp('     Analysis of site response through equivalent linear method         ');
-disp('         Written by: Naeem Khoshnevis (15 October 2015)                 ');
+disp('                      Written by: Naeem Khoshnevis                      ');
 disp('                         nkhshnvs@memphis.edu                           ');
-disp('                     Last update: 9 February 2016                       ');
 disp('                                   * * *                                ');
 
 
@@ -38,25 +37,21 @@ rock_soil_type = {'rock','sand'};
 % Bedrock should have two elements to be considered. 
 
 soil_layers = [ 2 99 1 1
-                2 1 0.1 1
-                1 0.2 0.1 1
+                2 1  1 1
+                1 5  1 1
                  ];
 
 depth_results = [0,12]; % Input depth that you want waveform for them.  
 
 %% Simulation Parameters
 
-sim_time      = 10;
-dt            = 0.001;
-input_acceleration = 'input_acc/ricker_10Hz.txt';
+sim_time      = 60;
+dt            = 0.005;
+input_acceleration = 'input_acc/ChiChi.txt';
 num_it        = 1;      % Number of iteration for equivalent linear method.
 g             = 9.80665;
-max_value_acc = 0.01;      % coefficient for maximum value of the input as % of g. (use -1 for using original value)
+max_value_acc = -1;      % coefficient for maximum value of the input as % of g. (use -1 for using original value)
 solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (disp) will dislocate the base node.
-
-%force_coeff   = (1105920000/8)*0.1; % temporal force coeffitient (mu/h)
-%timeshift     = (8/640/dt); %temporal time shift (h/vs/dt)
-
 
 % Damping options
 % SRD   ==> Simplified Rayleigh (1 frequency Rayleigh Damping)
@@ -70,9 +65,6 @@ solution_type = 'acc';  % acceleration (acc) will force the mass, displacement (
 
 use_damping   = 'SRD';
 
-
-% * FIRD damping in this program is not frequency independent damping
-% implemented in deepsoil. I will rename this damping.
 %% Running the simulation
 
 run_fem
